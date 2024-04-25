@@ -44,7 +44,7 @@ It's recommened to use both of them with the same value.
 ip_scale can be set from 0~1, 0 stands for not considering the audio input, 1 means considering text and audio equally.
 ```
 ## Train from scratch
-It's also recommend to train from scratch if you have computation resource, the checkpoint we provide was only trained for 35000 steps, with effective batchsize 32.
+It's also recommend to train from scratch if you have powerful computation resource, the checkpoint we provide was only trained for 35000 steps, with effective batchsize 32.
 For the original training code, we use the Audioset download from https://github.com/dlrudco/Fast-Audioset-Download. We only use 200k audio-text pairs due to memory capacity. 
 ```
 ##change the DATA_DIR and OUTPUT_DIR
