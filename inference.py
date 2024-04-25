@@ -60,7 +60,7 @@ for name in unet.attn_processors.keys():
                         cross_attention_dim=cross_attention_dim,
                         scale=ip_scale,
                         num_tokens=8,
-                        do_copy = True
+                        do_copy = False
                     ).to("cuda", dtype=torch.float16)
                 #     print("attn_procs",attn_procs)
                 else:
