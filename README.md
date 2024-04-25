@@ -1,8 +1,5 @@
 # AP-adapter
 
-
-One Paragraph of project description goes here
-
 ## Table of Contents
 - [Installation](#installation)
 - [Downloading Checkpoints](#downloading-checkpoints)
