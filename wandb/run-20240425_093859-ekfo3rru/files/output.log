@@ -1,0 +1,39 @@
+04/25/2024 09:39:04 - INFO - __main__ - ***** Running training *****
+04/25/2024 09:39:04 - INFO - __main__ -   Num examples = 239535
+04/25/2024 09:39:04 - INFO - __main__ -   Num Epochs = 67
+04/25/2024 09:39:04 - INFO - __main__ -   Instantaneous batch size per device = 4
+04/25/2024 09:39:04 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 16
+04/25/2024 09:39:04 - INFO - __main__ -   Gradient Accumulation steps = 4
+04/25/2024 09:39:04 - INFO - __main__ -   Total optimization steps = 1000000
+Steps:   0%|                                                                                                                                   | 0/1000000 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+Steps:   0%|                                                                                               | 2/1000000 [01:04<7896:53:44, 28.43s/it, loss=0.337, lr=0.0001]Traceback (most recent call last):
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/train_ipadapter_v2.py", line 1722, in <module>
+    main()
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/train_ipadapter_v2.py", line 1550, in main
+    model = AudioMAEConditionCTPoolRand().cuda()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 905, in cuda
+    return self._apply(lambda t: t.cuda(device))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  [Previous line repeated 2 more times]
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 820, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 905, in <lambda>
+    return self._apply(lambda t: t.cuda(device))
+                                 ^^^^^^^^^^^^^^
+KeyboardInterrupt

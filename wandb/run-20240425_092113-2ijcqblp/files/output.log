@@ -1,0 +1,66 @@
+04/25/2024 09:21:18 - INFO - __main__ - ***** Running training *****
+04/25/2024 09:21:18 - INFO - __main__ -   Num examples = 239535
+04/25/2024 09:21:18 - INFO - __main__ -   Num Epochs = 67
+04/25/2024 09:21:18 - INFO - __main__ -   Instantaneous batch size per device = 4
+04/25/2024 09:21:18 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 16
+04/25/2024 09:21:18 - INFO - __main__ -   Gradient Accumulation steps = 4
+04/25/2024 09:21:18 - INFO - __main__ -   Total optimization steps = 1000000
+Steps:   0%|                                                                                                                                                           | 0/1000000 [00:00<?, ?it/s]
+Current process is using device: 0
+
+Steps:   0%|                                                                                                                                   | 0/1000000 [00:42<?, ?it/s, loss=0.0857, lr=0.0001]
+
+Steps:   0%|                                                                                                                                    | 0/1000000 [00:45<?, ?it/s, loss=0.111, lr=0.0001]
+
+Steps:   0%|                                                                                                                                    | 0/1000000 [00:48<?, ?it/s, loss=0.219, lr=0.0001]
+
+Steps:   0%|                                                                                                                     | 1/1000000 [00:50<14115:42:44, 50.82s/it, loss=0.0813, lr=0.0001]
+
+Steps:   0%|                                                                                                                     | 1/1000000 [00:53<14115:42:44, 50.82s/it, loss=0.0411, lr=0.0001]
+
+Steps:   0%|                                                                                                                    | 1/1000000 [00:56<14115:42:44, 50.82s/it, loss=0.00755, lr=0.0001]
+
+Steps:   0%|                                                                                                                     | 1/1000000 [00:59<14115:42:44, 50.82s/it, loss=0.0449, lr=0.0001]
+noisy_latents.shape torch.Size([4, 8, 256, 16])
+
+
+Steps:   0%|                                                                                                                      | 2/1000000 [01:04<7657:12:27, 27.57s/it, loss=0.0039, lr=0.0001]
+
+Steps:   0%|                                                                                                                         | 2/1000000 [01:07<7657:12:27, 27.57s/it, loss=0.2, lr=0.0001]
+Steps:   0%|                                                                                                                      | 2/1000000 [01:10<7657:12:27, 27.57s/it, loss=0.0192, lr=0.0001]Traceback (most recent call last):
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/train_ipadapter_v2.py", line 1723, in <module>
+    main()
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/train_ipadapter_v2.py", line 1551, in main
+    model = AudioMAEConditionCTPoolRand().cuda()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/AudioMAE.py", line 126, in __init__
+    self.audiomae = Vanilla_AudioMAE()
+                    ^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/AudioMAE.py", line 24, in __init__
+    model = models_mae.__dict__["mae_vit_base_patch16"](
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/models_mae.py", line 690, in mae_vit_base_patch16_dec512d8b
+    model = MaskedAutoencoderViT(
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/models_mae.py", line 325, in __init__
+    self.initialize_weights()
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/models_mae.py", line 367, in initialize_weights
+    self.apply(self._init_weights)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 884, in apply
+    module.apply(fn)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 884, in apply
+    module.apply(fn)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 884, in apply
+    module.apply(fn)
+  [Previous line repeated 1 more time]
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/modules/module.py", line 885, in apply
+    fn(self)
+  File "/home/fundwotsai/DreamSound/AP-adapter-full/audio_encoder/models_mae.py", line 372, in _init_weights
+    torch.nn.init.xavier_uniform_(m.weight)
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/init.py", line 327, in xavier_uniform_
+    return _no_grad_uniform_(tensor, -a, a)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/anaconda3/envs/DreamSound/lib/python3.11/site-packages/torch/nn/init.py", line 14, in _no_grad_uniform_
+    return tensor.uniform_(a, b)
+           ^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

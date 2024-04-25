@@ -1,0 +1,257 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.5
+    cli_version: 0.16.1
+    framework: huggingface
+    huggingface_version: 4.30.2
+    is_jupyter_run: false
+    is_kaggle_kernel: true
+    start_time: 1714037939.252032
+    t:
+      1:
+      - 1
+      - 2
+      - 3
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      - 63
+      - 71
+      - 83
+      - 105
+      2:
+      - 1
+      - 2
+      - 3
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      - 63
+      - 71
+      - 83
+      - 105
+      3:
+      - 23
+      4: 3.11.5
+      5: 0.16.1
+      6: 4.30.2
+      8:
+      - 2
+      - 5
+      13: linux-x86_64
+config:
+  desc: null
+  value: null
+train_text_encoder:
+  desc: null
+  value: false
+train_gpt2:
+  desc: null
+  value: false
+save_steps:
+  desc: null
+  value: 500
+save_as_full_pipeline:
+  desc: null
+  value: false
+num_vectors:
+  desc: null
+  value: 1
+pretrained_model_name_or_path:
+  desc: null
+  value: cvssp/audioldm2-large
+ipadapter:
+  desc: null
+  value: 'True'
+revision:
+  desc: null
+  value: null
+tokenizer_name:
+  desc: null
+  value: null
+train_data_dir:
+  desc: null
+  value: /home/fundwotsai/DreamSound/Fast-Audioset-Download/wavs/unbalanced_train
+class_data_dir:
+  desc: null
+  value: null
+class_prompt:
+  desc: null
+  value: null
+with_prior_preservation:
+  desc: null
+  value: false
+prior_loss_weight:
+  desc: null
+  value: 1
+num_class_audio_files:
+  desc: null
+  value: 50
+file_list:
+  desc: null
+  value: null
+initializer:
+  desc: null
+  value: random_token
+initializer_token:
+  desc: null
+  value: null
+learnable_property:
+  desc: null
+  value: object
+object_class:
+  desc: null
+  value: null
+instance_word:
+  desc: null
+  value: null
+repeats:
+  desc: null
+  value: 100
+output_dir:
+  desc: null
+  value: /home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v3
+seed:
+  desc: null
+  value: null
+sample_rate:
+  desc: null
+  value: 16000
+duration:
+  desc: null
+  value: 10.0
+train_batch_size:
+  desc: null
+  value: 4
+sample_batch_size:
+  desc: null
+  value: 4
+num_train_epochs:
+  desc: null
+  value: 67
+max_train_steps:
+  desc: null
+  value: 1000000
+gradient_accumulation_steps:
+  desc: null
+  value: 4
+gradient_checkpointing:
+  desc: null
+  value: false
+learning_rate:
+  desc: null
+  value: 0.0001
+scale_lr:
+  desc: null
+  value: false
+lr_scheduler:
+  desc: null
+  value: constant
+lr_warmup_steps:
+  desc: null
+  value: 500
+lr_num_cycles:
+  desc: null
+  value: 1
+use_8bit_adam:
+  desc: null
+  value: false
+dataloader_num_workers:
+  desc: null
+  value: 4
+adam_beta1:
+  desc: null
+  value: 0.9
+adam_beta2:
+  desc: null
+  value: 0.999
+adam_weight_decay:
+  desc: null
+  value: 0.01
+adam_epsilon:
+  desc: null
+  value: 1.0e-08
+max_grad_norm:
+  desc: null
+  value: 1.0
+push_to_hub:
+  desc: null
+  value: false
+hub_token:
+  desc: null
+  value: null
+hub_model_id:
+  desc: null
+  value: null
+logging_dir:
+  desc: null
+  value: logs
+mixed_precision:
+  desc: null
+  value: 'no'
+allow_tf32:
+  desc: null
+  value: false
+report_to:
+  desc: null
+  value: wandb
+validation_prompt:
+  desc: null
+  value: null
+num_validation_audio_files:
+  desc: null
+  value: 1
+validation_steps:
+  desc: null
+  value: 1000
+validation_epochs:
+  desc: null
+  value: null
+validate_experiments:
+  desc: null
+  value: false
+prior_generation_precision:
+  desc: null
+  value: null
+local_rank:
+  desc: null
+  value: -1
+checkpointing_steps:
+  desc: null
+  value: 1000
+offset_noise:
+  desc: null
+  value: false
+checkpoints_total_limit:
+  desc: null
+  value: null
+resume_from_checkpoint:
+  desc: null
+  value: null
+enable_xformers_memory_efficient_attention:
+  desc: null
+  value: false
+save_concept_audio:
+  desc: null
+  value: false
+augment_data:
+  desc: null
+  value: false
+mix_data:
+  desc: null
+  value: null
+snr:
+  desc: null
+  value: 20
+num_audio_files_to_train:
+  desc: null
+  value: null
