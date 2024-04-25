@@ -1,11 +1,5 @@
 # AP-adapter
 
-## Table of Contents
-- [Installation](#installation)
-- [Downloading Checkpoints](#downloading-checkpoints)
-- [Usage](#usage)
-- [Parameters](#parameters)
-
 ## Installation
 
 Provide a step by step series of examples that tell you how to get a development environment running.
