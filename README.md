@@ -1,4 +1,4 @@
-# zero-shot-music-fusion(for inference)
+# AP-adapter
 
 
 One Paragraph of project description goes here
