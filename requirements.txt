@@ -1,0 +1,14 @@
+diffusers==0.21.2
+transformers==4.30.2
+accelerate==0.23.0
+pandas==2.1.0
+soundfile==0.12.1
+torchvision==0.15.2
+torchaudio==2.0.2
+audioldm
+ruamel.yaml
+frechet-audio-distance==0.1.2
+torchaudio-augmentations==0.2.4
+tensorboard==2.14.0
+timm
+gdown
