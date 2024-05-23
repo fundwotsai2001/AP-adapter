@@ -27,7 +27,7 @@ You will need to change the paths in inference.py
 
 ## Parameter in inference.py
 
-AudioMAE will do pooling to both time and frequncy tokens in order to avoid just reconstruct the original audio. Largeer pooling rate will abandon information, thus will enhance the editability.
+AudioMAE will do pooling to both time and frequncy tokens in order to avoid just reconstruct the original audio. Largeer pooling rate will abandon information, thus will enhance the editability. We have standard parameter sets for the three tasks, you can go to https://young-almond-689.notion.site/Zero-shot-music-text-fusionfbbfeb0608664f61a6bf894d56e85820.
 ```
 time_pooling can be set to 1,2,4,8,16,32,64
 freq_pooling can only be set to 1,2,4,8
