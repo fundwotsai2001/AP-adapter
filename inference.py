@@ -77,9 +77,9 @@ for name, processor in attn_procs.items():
                 weight_name_k = name + ".to_k_ip.weight"
                 processor.to_v_ip.weight = torch.nn.Parameter(state_dict[weight_name_v].half())
                 processor.to_k_ip.weight = torch.nn.Parameter(state_dict[weight_name_k].half())
-                print(f"weights found for {name}")
-        else:
-                print(f"Warning: No weights found for {name}")
+                # print(f"weights found for {name}")
+        # else:
+        #         print(f"Warning: No weights found for {name}")
 
 # # Apply the updated attention processors to the U-Net
 unet.set_attn_processor(attn_procs)
