@@ -4,7 +4,6 @@ import os
 import scipy
 # from IPAdapter.ip_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0,IPAttnProcessor2_0
 from APadapter.ap_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0,IPAttnProcessor2_0
-
 from diffusers.loaders import AttnProcsLayers
 
 sample_rate = 16000

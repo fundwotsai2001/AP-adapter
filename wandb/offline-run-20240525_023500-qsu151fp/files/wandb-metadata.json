@@ -1,0 +1,193 @@
+{
+    "os": "Linux-5.15.0-107-generic-x86_64-with-glibc2.35",
+    "python": "3.11.5",
+    "heartbeatAt": "2024-05-25T02:35:00.645442",
+    "startedAt": "2024-05-25T02:35:00.531229",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--pretrained_model_name_or_path=cvssp/audioldm2-large",
+        "--train_data_dir=/home/fundwotsai/DreamSound/Fast-Audioset-Download/wavs/unbalanced_train",
+        "--train_batch_size=4",
+        "--gradient_accumulation_steps=4",
+        "--max_train_steps=1000000",
+        "--learning_rate=1e-4",
+        "--output_dir=/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v3",
+        "--validation_steps=1000",
+        "--num_validation_audio_files=1",
+        "--num_vectors=1",
+        "--checkpointing_steps=1000",
+        "--ipadapter=True"
+    ],
+    "state": "running",
+    "program": "/home/fundwotsai/AP-adapter-full/train_ipadapter_v2.py",
+    "codePathLocal": "train_ipadapter_v2.py",
+    "codePath": "train_ipadapter_v2.py",
+    "git": {
+        "remote": "https://github.com/fundwotsai2001/AP-adapter-full.git",
+        "commit": "995b859af291819629fe2eeca6af889ac446c32b"
+    },
+    "email": "b08901204@ntu.edu.tw",
+    "root": "/home/fundwotsai/AP-adapter-full",
+    "host": "terra",
+    "username": "fundwotsai",
+    "executable": "/home/fundwotsai/anaconda3/envs/DreamSound/bin/python",
+    "cpu_count": 12,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 1971.3469166666664,
+        "min": 800.0,
+        "max": 3300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2400.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2200.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1473.095,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2969.62,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2200.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2200.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2969.611,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1500.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2300.0,
+            "min": 800.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2100.0,
+            "min": 800.0,
+            "max": 3300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 878.1072120666504,
+            "used": 550.898365020752
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 4,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        },
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        },
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        },
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        }
+    ],
+    "memory": {
+        "total": 188.06632232666016
+    }
+}
