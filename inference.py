@@ -91,7 +91,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_files", type=int, default=5, help="Number of files to generate per prompt")
     parser.add_argument("--audio_prompt_file", type=str, default="piano.wav", help="Path to the primary audio prompt file")
     parser.add_argument("--audio_prompt_file2", type=str, default=None, help="Path to the secondary audio prompt file")
-    parser.add_argument("--ap_ckpt", type=str, required=True, help="Path to the AP checkpoint file")
+    parser.add_argument("--ap_ckpt", type=str, default="pytorch_model.bin", help="Path to the AP checkpoint file")
     parser.add_argument("--ap_scale", type=float, default=0.5, help="AP scale")
     parser.add_argument("--time_pooling", type=int, default=2, help="Time pooling factor")
     parser.add_argument("--freq_pooling", type=int, default=2, help="Frequency pooling factor")

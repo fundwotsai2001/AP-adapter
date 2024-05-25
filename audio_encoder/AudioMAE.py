@@ -25,7 +25,7 @@ class Vanilla_AudioMAE(nn.Module):
             in_chans=1, audio_exp=True, img_size=(1024, 128)
         )
 
-        checkpoint_path = '/home/fundwotsai/DreamSound/pretrained.pth'
+        checkpoint_path = 'pretrained.pth'
         checkpoint = torch.load(checkpoint_path, map_location='cpu')
         msg = model.load_state_dict(checkpoint['model'], strict=False)
 
