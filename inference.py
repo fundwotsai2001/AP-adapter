@@ -2,7 +2,9 @@ import torch
 from pipeline.pipeline_audioldm2 import AudioLDM2Pipeline
 import os
 import scipy
-from IPAdapter.ip_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0,IPAttnProcessor2_0
+# from IPAdapter.ip_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0,IPAttnProcessor2_0
+from APadapter.ap_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0,IPAttnProcessor2_0
+
 from diffusers.loaders import AttnProcsLayers
 
 sample_rate = 16000
@@ -11,11 +13,11 @@ ip_scale = 0.5
 time_pooling = 2
 freq_pooling = 2
 # output folder
-dir = "test_no_training"
+dir = "test"
 num_files = 5
 audio_promt_file2 = None
 audio_promt_file = "piano.wav"
-ip_ckpt = "/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v3/checkpoint-26000/pytorch_model.bin"
+ip_ckpt = "/home/fundwotsai/AP-adapter-full/checkpoint-26000/pytorch_model.bin"
 
 os.makedirs(dir, exist_ok=True)
 pipeline_trained = AudioLDM2Pipeline.from_pretrained("cvssp/audioldm2-large", torch_dtype=torch.float16)
