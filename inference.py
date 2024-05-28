@@ -2,26 +2,22 @@ import torch
 from pipeline.pipeline_audioldm2 import AudioLDM2Pipeline
 import os
 import scipy
-import argparse
 from APadapter.ap_adapter.attention_processor import AttnProcessor2_0, CNAttnProcessor2_0, IPAttnProcessor2_0
 from diffusers.loaders import AttnProcsLayers
+from config import get_config
+import argparse
 
-def main(args):
-    os.makedirs(args.dir, exist_ok=True)
+def main(config):
+    os.makedirs(config["output_dir"], exist_ok=True)
     
     pipeline_trained = AudioLDM2Pipeline.from_pretrained("cvssp/audioldm2-large", torch_dtype=torch.float16)
     pipeline_trained = pipeline_trained.to("cuda")
     layer_num = 0
     cross = [None, None, 768, 768, 1024, 1024, None, None]
     unet = pipeline_trained.unet
-
-    prompt_for_trained = [
-        ["a recording of a Marimba solo"],
-        ["a recording of a violin solo"],
-        ["a recording of an acoustic guitar solo"],
-        ["a recording of a harp solo"]
-    ]
-    negative_prompt_for_trained = ["a recording of a piano solo"]
+    
+    positive_text_prompt = config["positive_text_prompt"]
+    negative_text_prompt = config["negative_text_prompt"]
 
     attn_procs = {}
     for name in unet.attn_processors.keys():
@@ -45,14 +41,14 @@ def main(args):
                     hidden_size=hidden_size,
                     name=name,
                     cross_attention_dim=cross_attention_dim,
-                    scale=args.ap_scale,
+                    scale=config["ap_scale"],
                     num_tokens=8,
                     do_copy=False
                 ).to("cuda", dtype=torch.float16)
             else:
                 attn_procs[name] = AttnProcessor2_0()
 
-    state_dict = torch.load(args.ap_ckpt, map_location="cuda")
+    state_dict = torch.load(config["ap_ckpt"], map_location="cuda")
     for name, processor in attn_procs.items():
         if hasattr(processor, 'to_v_ip') or hasattr(processor, 'to_k_ip'):
             weight_name_v = name + ".to_v_ip.weight"
@@ -68,33 +64,28 @@ def main(args):
 
     unet = _Wrapper(unet.attn_processors)
 
-    for i in range(len(prompt_for_trained)):
+    for i in range(len(positive_text_prompt)):
         waveform = pipeline_trained(
-            audio_file=args.audio_prompt_file,
-            audio_file2=args.audio_prompt_file2,
-            time_pooling=args.time_pooling,
-            freq_pooling=args.freq_pooling,
-            prompt=prompt_for_trained[i] * args.num_files,
-            negative_prompt=negative_prompt_for_trained * args.num_files,
+            audio_file=config["audio_prompt_file"],
+            audio_file2=config["audio_prompt_file2"],
+            time_pooling=config["time_pooling"],
+            freq_pooling=config["freq_pooling"],
+            prompt=positive_text_prompt[i] * config["output_num_files"],
+            negative_prompt=negative_text_prompt * config["output_num_files"],
             num_inference_steps=50,
-            guidance_scale=7.5,
+            guidance_scale=config["guidance_scale"],
             num_waveforms_per_prompt=1,
-            audio_length_in_s=10
+            audio_length_in_s=10,
         ).audios
-        for j in range(args.num_files):
-            file_path = os.path.join(args.dir, f"{prompt_for_trained[i][0]}_{j}_ip{args.ap_scale}_t{args.time_pooling}_f{args.freq_pooling}.wav")
+        for j in range(config["output_num_files"]):
+            file_path = os.path.join(config["output_dir"], f"{positive_text_prompt[i][0]}_{j}_ip{config['ap_scale']}_t{config['time_pooling']}_f{config['freq_pooling']}.wav")
             scipy.io.wavfile.write(file_path, rate=16000, data=waveform[j])
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AudioLDM2 Inference Script")
-    parser.add_argument("--dir", type=str, default="test", help="Output directory")
-    parser.add_argument("--num_files", type=int, default=5, help="Number of files to generate per prompt")
-    parser.add_argument("--audio_prompt_file", type=str, default="piano.wav", help="Path to the primary audio prompt file")
-    parser.add_argument("--audio_prompt_file2", type=str, default=None, help="Path to the secondary audio prompt file")
-    parser.add_argument("--ap_ckpt", type=str, default="pytorch_model.bin", help="Path to the AP checkpoint file")
-    parser.add_argument("--ap_scale", type=float, default=0.5, help="AP scale")
-    parser.add_argument("--time_pooling", type=int, default=2, help="Time pooling factor")
-    parser.add_argument("--freq_pooling", type=int, default=2, help="Frequency pooling factor")
 
-    args = parser.parse_args()
-    main(args)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="AP-adapter Inference Script")
+    parser.add_argument("--task", type=str, default="style transfer", help="how do you want to edit the music")
+    args = parser.parse_args()  # Parse the arguments
+    config = get_config(args.task)  # Pass the parsed arguments to get_config
+    main(config)

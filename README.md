@@ -28,11 +28,9 @@ You will need to change the paths in inference.py
 ## Parameter in inference.py
 
 AudioMAE will do pooling to both time and frequncy tokens in order to avoid just reconstruct the original audio. Largeer pooling rate will abandon information, thus will enhance the editability. We have standard parameter sets for the three tasks, you can go to https://young-almond-689.notion.site/Zero-shot-music-text-fusionfbbfeb0608664f61a6bf894d56e85820.
+
 ```
-time_pooling can be set to 1,2,4,8,16,32,64
-freq_pooling can only be set to 1,2,4,8
-It's recommended to use both of them with the same value.
-ip_scale can be set from 0~1, 0 stands for not considering the audio input, 1 means considering text and audio equally.
+python inference.py --dir timbre trans --num_files 5 --audio_prompt_file path_to_audio.wav --audio_prompt_file2 path_to_secondary_audio.wav --ip_ckpt path_to_checkpoint --ip_scale 0.5 --time_pooling 2 --freq_pooling 2
 ```
 ## Train from scratch
 It's also recommend to train from scratch if you have powerful computation resource, the checkpoint we provide was only trained for 35000 steps, with effective batchsize 32.

@@ -754,7 +754,7 @@ class AudioLDM2Pipeline(DiffusionPipeline,TextualInversionLoaderMixin):
         prompt: Union[str, List[str]] = None,
         audio_length_in_s: Optional[float] = None,
         num_inference_steps: int = 200,
-        guidance_scale: float = 12.0,
+        guidance_scale: float = 7.5,
         negative_prompt: Optional[Union[str, List[str]]] = None,
         num_waveforms_per_prompt: Optional[int] = 1,
         eta: float = 0.0,
@@ -942,7 +942,7 @@ class AudioLDM2Pipeline(DiffusionPipeline,TextualInversionLoaderMixin):
             uncond_LOA_embeds = uncond_LOA_embed[0]
             bs_embed, seq_len, _ = LOA_embeds.shape
             num = prompt_embeds.shape[0] // 2
-            print("num",num)
+            # print("num",num)
             LOA_embeds = LOA_embeds.view(bs_embed , seq_len, -1)
             LOA_embeds = LOA_embeds.repeat(num, 1, 1)
             LOA_embeds2 = LOA_embeds2.view(bs_embed , seq_len, -1)
@@ -950,17 +950,17 @@ class AudioLDM2Pipeline(DiffusionPipeline,TextualInversionLoaderMixin):
             uncond_LOA_embeds = uncond_LOA_embeds.view(bs_embed , seq_len, -1)
             uncond_LOA_embeds = uncond_LOA_embeds.repeat(num, 1, 1)
             negative_g, g = generated_prompt_embeds.chunk(2)
-            print("negative_g",negative_g.shape)
-            print("LOA_embed2",LOA_embeds2.shape)
-            print("uncond_LOA_embeds",uncond_LOA_embeds.shape)
-            print("LOA_embeds",LOA_embeds.shape)
+            # print("negative_g",negative_g.shape)
+            # print("LOA_embed2",LOA_embeds2.shape)
+            # print("uncond_LOA_embeds",uncond_LOA_embeds.shape)
+            # print("LOA_embeds",LOA_embeds.shape)
             uncond = torch.cat([negative_g, uncond_LOA_embeds], dim=1)
             cond = torch.cat([LOA_embeds2, LOA_embeds], dim=1)
-            print("uncond",uncond.shape)
-            print("cond",cond.shape)
+            # print("uncond",uncond.shape)
+            # print("cond",cond.shape)
             generated_prompt_embeds = torch.cat([uncond, cond], dim=0)
             # generated_prompt_embeds[1:2] = LOA_embeds
-            print("generated_prompt_embeds.shape", generated_prompt_embeds.shape)
+            # print("generated_prompt_embeds.shape", generated_prompt_embeds.shape)
             # Assuming 'model' is your pre-defined model
             model_dtype = next(self.unet.parameters()).dtype
             # print(model_dtype)
@@ -983,22 +983,22 @@ class AudioLDM2Pipeline(DiffusionPipeline,TextualInversionLoaderMixin):
             uncond_LOA_embeds = uncond_LOA_embed[0]
             bs_embed, seq_len, _ = LOA_embeds.shape
             num = prompt_embeds.shape[0] // 2
-            print("num",num)
+            # print("num",num)
             LOA_embeds = LOA_embeds.view(bs_embed , seq_len, -1)
             LOA_embeds = LOA_embeds.repeat(num, 1, 1)
             uncond_LOA_embeds = uncond_LOA_embeds.view(bs_embed , seq_len, -1)
             uncond_LOA_embeds = uncond_LOA_embeds.repeat(num, 1, 1)
             negative_g, g = generated_prompt_embeds.chunk(2)
-            print("negative_g",negative_g.shape)
-            print("uncond_LOA_embeds",uncond_LOA_embeds.shape)
-            print("LOA_embeds",LOA_embeds.shape)
+            # print("negative_g",negative_g.shape)
+            # print("uncond_LOA_embeds",uncond_LOA_embeds.shape)
+            # print("LOA_embeds",LOA_embeds.shape)
             uncond = torch.cat([negative_g, uncond_LOA_embeds], dim=1)
             cond = torch.cat([g, LOA_embeds], dim=1)
-            print("uncond",uncond.shape)
-            print("cond",cond.shape)
+            # print("uncond",uncond.shape)
+            # print("cond",cond.shape)
             generated_prompt_embeds = torch.cat([uncond, cond], dim=0)
             # generated_prompt_embeds[1:2] = LOA_embeds
-            print("generated_prompt_embeds.shape", generated_prompt_embeds.shape)
+            # print("generated_prompt_embeds.shape", generated_prompt_embeds.shape)
             # Assuming 'model' is your pre-defined model
             model_dtype = next(self.unet.parameters()).dtype
             # print(model_dtype)
