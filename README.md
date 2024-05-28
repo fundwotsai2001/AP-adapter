@@ -4,6 +4,7 @@ This is the official implementation of AP-adapter.
 We provide a step by step series of examples that tell you how to get a development environment running.
 
 ```bash
+pip install -r requirements.txt
 git clone https://github.com/fundwotsai2001/AP-adapter-full.git
 cd AP-adapter-full
 ```
