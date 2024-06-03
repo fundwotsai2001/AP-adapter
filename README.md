@@ -28,11 +28,11 @@ gdown https://drive.google.com/uc?id=1jbovWcsiVY4gzWfcqGq2O6ftOlIblAcw
 
 We have standard parameter sets for the three tasks, you can go to [demo](https://young-almond-689.notion.site/Zero-shot-music-text-fusionfbbfeb0608664f61a6bf894d56e85820) to see the detail settings, or directly use the template in config.py, you can also change the prompt settings there. Note that the effect of hyper-parameters are mentioned in the paper, but generally "ap_scale" is proportional to the audio strength, "time_pooling" and "frequency_pooling" are inversely proportional to the audio control strength. You can adjust these parameters to fit your requirement, or just use the default settings.
 ```
-python inferece --task timbre_transfer
-python inferece --task style_transfer
-python inferece --task accompaniment_generation
+python inference.py --task timbre_transfer
+python inference.py --task style_transfer
+python inference.py --task accompaniment_generation
 ## if you want to try something cool, use test and change the template in config.py
-python inferece --task test
+python inference.py --task test
 ```
 Unfortunately, the accompaniment generation does not perform well enough with the previous training, we are still working on it.
 ## Train from scratch
