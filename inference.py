@@ -67,7 +67,6 @@ def main(config):
     for i in range(len(positive_text_prompt)):
         waveform = pipeline_trained(
             audio_file=config["audio_prompt_file"],
-            audio_file2=config["audio_prompt_file2"],
             time_pooling=config["time_pooling"],
             freq_pooling=config["freq_pooling"],
             prompt=positive_text_prompt[i] * config["output_num_files"],
@@ -85,7 +84,8 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AP-adapter Inference Script")
-    parser.add_argument("--task", type=str, default="style transfer", help="how do you want to edit the music")
+    parser.add_argument("--task", type=str, default="style_transfer", help="how do you want to edit the music")
     args = parser.parse_args()  # Parse the arguments
     config = get_config(args.task)  # Pass the parsed arguments to get_config
+    print(config)
     main(config)

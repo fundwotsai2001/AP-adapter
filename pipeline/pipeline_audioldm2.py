@@ -916,57 +916,7 @@ class AudioLDM2Pipeline(DiffusionPipeline,TextualInversionLoaderMixin):
         # print("prompt_embeds",prompt_embeds.shape)
         # print("attention_mask",attention_mask.shape)
         # print("generated_prompt_embeds",generated_prompt_embeds.shape)
-        if audio_file != None and audio_file2 != None:
-            waveform, sr = torchaudio.load(audio_file)
-            waveform2, sr2 = torchaudio.load(audio_file2)
-            fbank = torch.zeros((1024, 128))
-            # print(sr)
-            ta_kaldi_fbank = extract_kaldi_fbank_feature(waveform, sr, fbank)
-            # print("ta_kaldi_fbank.shape",ta_kaldi_fbank.shape)
-            mel_spect_tensor = ta_kaldi_fbank.unsqueeze(0)
-
-            ta_kaldi_fbank2 = extract_kaldi_fbank_feature(waveform2, sr2, fbank)
-            # print("ta_kaldi_fbank.shape",ta_kaldi_fbank.shape)
-            mel_spect_tensor2 = ta_kaldi_fbank2.unsqueeze(0)
-
-            # print("mel_spect_tensor.shape",mel_spect_tensor.shape)
-            model = AudioMAEConditionCTPoolRand().cuda()
-            model.eval()
-            LOA_embed = model(mel_spect_tensor, time_pool=time_pooling, freq_pool=freq_pooling)
-            LOA_embed2 = model(mel_spect_tensor2, time_pool=time_pooling, freq_pool=freq_pooling)
-            uncond_LOA_embed = model(torch.zeros_like(mel_spect_tensor), time_pool=time_pooling, freq_pool=freq_pooling)
-            # print(LOA_embed[0].size(),uncond_LOA_embed[0].size())
-            # return LOA_embed[0], uncond_LOA_embed[0]
-            LOA_embeds = LOA_embed[0]
-            LOA_embeds2 = LOA_embed2[0]
-            uncond_LOA_embeds = uncond_LOA_embed[0]
-            bs_embed, seq_len, _ = LOA_embeds.shape
-            num = prompt_embeds.shape[0] // 2
-            # print("num",num)
-            LOA_embeds = LOA_embeds.view(bs_embed , seq_len, -1)
-            LOA_embeds = LOA_embeds.repeat(num, 1, 1)
-            LOA_embeds2 = LOA_embeds2.view(bs_embed , seq_len, -1)
-            LOA_embeds2 = LOA_embeds2.repeat(num, 1, 1)
-            uncond_LOA_embeds = uncond_LOA_embeds.view(bs_embed , seq_len, -1)
-            uncond_LOA_embeds = uncond_LOA_embeds.repeat(num, 1, 1)
-            negative_g, g = generated_prompt_embeds.chunk(2)
-            # print("negative_g",negative_g.shape)
-            # print("LOA_embed2",LOA_embeds2.shape)
-            # print("uncond_LOA_embeds",uncond_LOA_embeds.shape)
-            # print("LOA_embeds",LOA_embeds.shape)
-            uncond = torch.cat([negative_g, uncond_LOA_embeds], dim=1)
-            cond = torch.cat([LOA_embeds2, LOA_embeds], dim=1)
-            # print("uncond",uncond.shape)
-            # print("cond",cond.shape)
-            generated_prompt_embeds = torch.cat([uncond, cond], dim=0)
-            # generated_prompt_embeds[1:2] = LOA_embeds
-            # print("generated_prompt_embeds.shape", generated_prompt_embeds.shape)
-            # Assuming 'model' is your pre-defined model
-            model_dtype = next(self.unet.parameters()).dtype
-            # print(model_dtype)
-            # Convert your tensor to the same dtype as the model
-            generated_prompt_embeds = generated_prompt_embeds.to(model_dtype)
-        elif audio_file != None:
+        if audio_file != None:
             waveform, sr = torchaudio.load(audio_file)
             fbank = torch.zeros((1024, 128))
             # print(sr)
