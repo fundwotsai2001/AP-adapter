@@ -4,9 +4,12 @@ This is the official implementation of AP-adapter.
 We provide a step by step series of examples that tell you how to get a development environment running.
 
 ```bash
-pip install -r requirements.txt
 git clone https://github.com/fundwotsai2001/AP-adapter-full.git
 cd AP-adapter-full
+conda create -n APadapter python=3.11
+conda activate APadapter
+pip install -r requirements.txt
+
 ```
 ## Downloading checkpoint
 for AudioMAE checkpoint you can download it from 
