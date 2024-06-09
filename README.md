@@ -52,6 +52,9 @@ AP-ADAPTER-FULL/
             └── 000000
                 ├── id__-5esUcUAk.json
                 └── id__-5esUcUAk.m4a
+                            .
+                            .
+                            .
 ```
 After handling the dataset structure, you can run the command:
 ```
