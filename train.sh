@@ -16,7 +16,7 @@ accelerate launch train_ipadapter_v2.py \
 --num_validation_audio_files=1 \
 --num_vectors=1 \
 --checkpointing_steps=1000 \
---ipadapter=True \
+--apadapter=True \
 # --train_gpt2 \
 # --train_text_encoder \
 # --with_prior_preservation \

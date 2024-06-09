@@ -47,7 +47,6 @@ logger = get_logger(__name__)
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Simple example of a training script.")
-    parser.add_argument("--config", type=str, default=None, help="Path to .ini file.")
     parser.add_argument("--train_text_encoder", action="store_true", help="Whether to train the text encoder.")
     parser.add_argument("--train_gpt2", action="store_true", help="Whether to train the text encoder.")
     parser.add_argument(
@@ -59,7 +58,7 @@ def parse_args():
     parser.add_argument(
         "--save_as_full_pipeline",
         action="store_true",
-        help="Save the complete stable diffusion pipeline.",
+        help="Save the complete AudioLDM2 diffusion pipeline.",
     )
     parser.add_argument(
         "--pretrained_model_name_or_path",
@@ -69,7 +68,7 @@ def parse_args():
         help="Path to pretrained model or model identifier from huggingface.co/models.",
     )
     parser.add_argument(
-        "--ipadapter",
+        "--apadapter",
         default=False,
         required=False,
         help="use ipadapter or not",
@@ -80,7 +79,7 @@ def parse_args():
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="audio-inversion-model",
+        default="audio-adapter-model",
         help="The output directory where the model predictions and checkpoints will be written.",
     )
     parser.add_argument("--seed", type=int, default=None, help="A seed for reproducible training.")
@@ -224,15 +223,6 @@ def parse_args():
         help=(
             "Save a checkpoint of the training state every X updates. These checkpoints are only suitable for resuming"
             " training using `--resume_from_checkpoint`."
-        ),
-    )
-    parser.add_argument(
-        "--offset_noise",
-        action="store_true",
-        default=False,
-        help=(
-            "Fine-tuning against a modified noise"
-            " See: https://www.crosslabs.org//blog/diffusion-with-offset-noise for more information."
         ),
     )
     parser.add_argument(
@@ -535,9 +525,9 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     for _ in range(args.num_validation_audio_files):
         print("validation_prompt: {}".format(args.validation_prompt))
         audio_gen = pipeline(audio_file = random_file, prompt = args.validation_prompt,negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]
-        blening = pipeline(audio_file = "/home/fundwotsai/DreamSound/audioset/seg_audio/cutvalid_z8Wjdss5uMg_Reverberation, Music, Piano, Inside, small room.wav", prompt = "played with violin, two instrument duet",negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]        
+        # blening = pipeline(audio_file = "/home/fundwotsai/DreamSound/audioset/seg_audio/cutvalid_z8Wjdss5uMg_Reverberation, Music, Piano, Inside, small room.wav", prompt = "played with violin, two instrument duet",negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]        
         audios.append(audio_gen)
-        audios.append(blening)
+        # audios.append(blening)
         val_audio_dir = os.path.join(args.output_dir, "val_audio_{}".format(global_step))
         os.makedirs(val_audio_dir, exist_ok=True)
         for i, audio in enumerate(audios):
@@ -646,30 +636,30 @@ def main():
                 cross_attention_dim = cross[i%8]
                 i = i + 1
                 if cross_attention_dim == 768:
-                    layer_name = name.split(".processor")[0]
                     attn_procs[name] = IPAttnProcessor2_0(
                         hidden_size=hidden_size,
                         name = name,
                         cross_attention_dim=cross_attention_dim,
                         scale=1.0,
                         num_tokens=8,
+                        do_copy = True
                     ).to(accelerator.device, dtype=torch.float)
                     # attn_procs[name].load_state_dict(weights)
                 else:
                     attn_procs[name] = AttnProcessor2_0()
-        state_dict = torch.load("/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v2/checkpoint-113000/pytorch_model.bin", map_location="cuda")
+        # state_dict = torch.load("/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v2/checkpoint-113000/pytorch_model.bin", map_location="cuda")
         # Iterate through each attention processor
-        for name, processor in attn_procs.items():
-            # Assuming the state_dict's keys match the names of the processors
-        #     if name in state_dict:
-                # Load the weights
-                if hasattr(processor, 'to_v_ip') or hasattr(processor, 'to_k_ip'):
-                        weight_name_v = name + ".to_v_ip.weight"
-                        weight_name_k = name + ".to_k_ip.weight"
-                        processor.to_v_ip.weight = torch.nn.Parameter(state_dict[weight_name_v].float())
-                        processor.to_k_ip.weight = torch.nn.Parameter(state_dict[weight_name_k].float())
-                        processor.to_k_ip.weight.requires_grad = True
-                        processor.to_v_ip.weight.requires_grad = True
+        # for name, processor in attn_procs.items():
+        #     # Assuming the state_dict's keys match the names of the processors
+        # #     if name in state_dict:
+        #         # Load the weights
+        #         if hasattr(processor, 'to_v_ip') or hasattr(processor, 'to_k_ip'):
+        #                 weight_name_v = name + ".to_v_ip.weight"
+        #                 weight_name_k = name + ".to_k_ip.weight"
+        #                 processor.to_v_ip.weight = torch.nn.Parameter(state_dict[weight_name_v].float())
+        #                 processor.to_k_ip.weight = torch.nn.Parameter(state_dict[weight_name_k].float())
+        #                 processor.to_k_ip.weight.requires_grad = True
+        #                 processor.to_v_ip.weight.requires_grad = True
         unet.set_attn_processor(attn_procs)
         class _Wrapper(AttnProcsLayers):
             def forward(self, *args, **kwargs):
