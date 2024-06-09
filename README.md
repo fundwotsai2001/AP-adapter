@@ -6,10 +6,6 @@ We provide a step by step series of examples that tell you how to get a developm
 ```bash
 git clone https://github.com/fundwotsai2001/AP-adapter-full.git
 cd AP-adapter-full
-conda create -n APadapter python=3.11
-conda activate APadapter
-pip install -r requirements.txt
-
 ```
 ## Downloading checkpoint
 for AudioMAE checkpoint you can download it from 
@@ -20,7 +16,7 @@ For AP-adapter checkpoint you can download it from
 [AP-adpater](https://drive.google.com/drive/u/0/folders/1TPbiVx4ijjd2tdbLNmwPgpR8UUoRizmj)
 ```
 gdown https://drive.google.com/uc?id=1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu
-gdown https://drive.google.com/uc?id=1jbovWcsiVY4gzWfcqGq2O6ftOlIblAcw
+gdown https://drive.google.com/uc?id=1rA1zgCdioOpUpds-CdxL8uOKTx1-cAcH
 ```
 
 
@@ -28,16 +24,36 @@ gdown https://drive.google.com/uc?id=1jbovWcsiVY4gzWfcqGq2O6ftOlIblAcw
 
 We have standard parameter sets for the three tasks, you can go to [demo](https://young-almond-689.notion.site/Zero-shot-music-text-fusionfbbfeb0608664f61a6bf894d56e85820) to see the detail settings, or directly use the template in config.py, you can also change the prompt settings there. Note that the effect of hyper-parameters are mentioned in the paper, but generally "ap_scale" is proportional to the audio strength, "time_pooling" and "frequency_pooling" are inversely proportional to the audio control strength. You can adjust these parameters to fit your requirement, or just use the default settings.
 ```
-python inference.py --task timbre_transfer
-python inference.py --task style_transfer
-python inference.py --task accompaniment_generation
+python inferece --task timbre_transfer
+python inferece --task style_transfer
+python inferece --task accompaniment_generation
 ## if you want to try something cool, use test and change the template in config.py
-python inference.py --task test
+python inferece --task test
 ```
 Unfortunately, the accompaniment generation does not perform well enough with the previous training, we are still working on it.
 ## Train from scratch
 It's also recommend to train from scratch if you have powerful computation resource, the checkpoint we provide was only trained for 35000 steps, with effective batchsize 32.
-For the original training code, we use the Audioset download from https://github.com/dlrudco/Fast-Audioset-Download. We only use 200k audio-text pairs due to memory capacity. 
+We only use 200k audio-text pairs from Audioset due to memory capacity. 
+To use our training code, you can use https://github.com/dlrudco/Fast-Audioset-Download to download the dataset, and put "Fast-Audioset-Download" in the way below.
+```
+AP-ADAPTER-FULL/
+├── pycache/
+├── pipeline/
+├── APadapter/
+├── audio_encoder/
+├── copied_cross_attention/
+└── Fast-Audioset-Download/
+    ├── csvs/
+    ├── temps/
+    └── wavs/
+        ├── balanced_train/
+        ├── eval/
+        └── unbalanced_train/
+            └── 000000
+                ├── id__-5esUcUAk.json
+                └── id__-5esUcUAk.m4a
+```
+After handling the dataset structure, you can run the command:
 ```
 ##change the DATA_DIR and OUTPUT_DIR in train.sh, and run
 ./train.sh
