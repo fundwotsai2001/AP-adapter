@@ -10,8 +10,6 @@ cd AP-adapter-full
 ## Downloading checkpoint
 for AudioMAE checkpoint you can download it from 
 [pretrain](https://drive.google.com/file/d/1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu/view?usp=share_link)
-
-You will need to change the path in audio_encoder/AudioMAE.py.
 For AP-adapter checkpoint you can download it from
 [AP-adpater](https://drive.google.com/drive/u/0/folders/1TPbiVx4ijjd2tdbLNmwPgpR8UUoRizmj)
 ```
