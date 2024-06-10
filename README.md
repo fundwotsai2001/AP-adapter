@@ -1,5 +1,5 @@
 # AP-adapter
-This is the official implementation of AP-adapter.
+This is the official implementation of AP-adapter. Please give me a star if you found this project useful~
 ## Installation
 We provide a step by step series of examples that tell you how to get a development environment running.
 
@@ -52,12 +52,14 @@ AP-ADAPTER-FULL/
             └── 000000
                 ├── id__-5esUcUAk.json
                 └── id__-5esUcUAk.m4a
-                            .
-                            .
-                            .
 ```
-After handling the dataset structure, you can run the command:
+After handling the dataset structure, you can run the command to train the adapter from scratch:
 ```
 ##change the DATA_DIR and OUTPUT_DIR in train.sh, and run
 ./train.sh
+```
+Or you can start from the previously downloaded checkpoint [AP-adpater](https://drive.google.com/drive/u/0/folders/1TPbiVx4ijjd2tdbLNmwPgpR8UUoRizmj).
+```
+##change the DATA_DIR and OUTPUT_DIR in finetune.sh, and run
+./finetune.sh
 ```
