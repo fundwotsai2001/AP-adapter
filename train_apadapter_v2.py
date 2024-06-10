@@ -71,7 +71,7 @@ def parse_args():
         "--apadapter",
         default=False,
         required=False,
-        help="use ipadapter or not",
+        help="use apadapter or not",
     )
     parser.add_argument(
         "--train_data_dir", type=str, default=None, required=False, help="A folder containing the training data."
@@ -612,8 +612,9 @@ def main():
     vocoder.requires_grad_(False)
     projection_model.requires_grad_(False)
     unet.requires_grad_(False)
-    if args.ipadapter:
-        print("use ipadapter")
+    do_copy = True if args.resume_from_checkpoint == None else False
+    if args.apadapter:
+        print("use apadapter")
         # Set correct lora layers
         attn_procs = {}
         i = 0
@@ -642,24 +643,26 @@ def main():
                         cross_attention_dim=cross_attention_dim,
                         scale=1.0,
                         num_tokens=8,
-                        do_copy = True
+                        do_copy = do_copy
                     ).to(accelerator.device, dtype=torch.float)
                     # attn_procs[name].load_state_dict(weights)
                 else:
                     attn_procs[name] = AttnProcessor2_0()
-        # state_dict = torch.load("/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v2/checkpoint-113000/pytorch_model.bin", map_location="cuda")
-        # Iterate through each attention processor
-        # for name, processor in attn_procs.items():
-        #     # Assuming the state_dict's keys match the names of the processors
-        # #     if name in state_dict:
-        #         # Load the weights
-        #         if hasattr(processor, 'to_v_ip') or hasattr(processor, 'to_k_ip'):
-        #                 weight_name_v = name + ".to_v_ip.weight"
-        #                 weight_name_k = name + ".to_k_ip.weight"
-        #                 processor.to_v_ip.weight = torch.nn.Parameter(state_dict[weight_name_v].float())
-        #                 processor.to_k_ip.weight = torch.nn.Parameter(state_dict[weight_name_k].float())
-        #                 processor.to_k_ip.weight.requires_grad = True
-        #                 processor.to_v_ip.weight.requires_grad = True
+        if args.resume_from_checkpoint:
+            state_dict = torch.load(args.resume_from_checkpoint, map_location="cuda")
+            # Iterate through each attention processor
+            for name, processor in attn_procs.items():
+                # Assuming the state_dict's keys match the names of the processors
+            #     if name in state_dict:
+                    # Load the weights
+                    if hasattr(processor, 'to_v_ip') or hasattr(processor, 'to_k_ip'):
+                            weight_name_v = name + ".to_v_ip.weight"
+                            weight_name_k = name + ".to_k_ip.weight"
+                            processor.to_v_ip.weight = torch.nn.Parameter(state_dict[weight_name_v].float())
+                            processor.to_k_ip.weight = torch.nn.Parameter(state_dict[weight_name_k].float())
+                            processor.to_k_ip.weight.requires_grad = True
+                            processor.to_v_ip.weight.requires_grad = True
+            print(f"load checkpoint from {args.resume_from_checkpoint}")
         unet.set_attn_processor(attn_procs)
         class _Wrapper(AttnProcsLayers):
             def forward(self, *args, **kwargs):
@@ -873,30 +876,30 @@ def main():
     first_epoch = 0
 
     # Potentially load in the weights and states from a previous save
-    if args.resume_from_checkpoint:
-        if args.resume_from_checkpoint != "latest":
-            path = os.path.basename(args.resume_from_checkpoint)
-        else:
-            # Get the most recent checkpoint
-            dirs = os.listdir(args.output_dir)
-            dirs = [d for d in dirs if d.startswith("checkpoint")]
-            dirs = sorted(dirs, key=lambda x: int(x.split("-")[1]))
-            path = dirs[-1] if len(dirs) > 0 else None
+    # if args.resume_from_checkpoint:
+    #     if args.resume_from_checkpoint != "latest":
+    #         path = os.path.basename(args.resume_from_checkpoint)
+    #     else:
+    #         # Get the most recent checkpoint
+    #         dirs = os.listdir(args.output_dir)
+    #         dirs = [d for d in dirs if d.startswith("checkpoint")]
+    #         dirs = sorted(dirs, key=lambda x: int(x.split("-")[1]))
+    #         path = dirs[-1] if len(dirs) > 0 else None
 
-        if path is None:
-            accelerator.print(
-                f"Checkpoint '{args.resume_from_checkpoint}' does not exist. Starting a new training run."
-            )
-            args.resume_from_checkpoint = None
-            # if we're not going to resume from checkpoint, we need to save the initial embeddings
-        else:
-            accelerator.print(f"Resuming from checkpoint {path}")
-            accelerator.load_state(os.path.join(args.output_dir, path))
-            global_step = int(path.split("-")[1])
+    #     if path is None:
+    #         accelerator.print(
+    #             f"Checkpoint '{args.resume_from_checkpoint}' does not exist. Starting a new training run."
+    #         )
+    #         args.resume_from_checkpoint = None
+    #         # if we're not going to resume from checkpoint, we need to save the initial embeddings
+    #     else:
+    #         accelerator.print(f"Resuming from checkpoint {path}")
+    #         accelerator.load_state(os.path.join(args.output_dir, path))
+    #         global_step = int(path.split("-")[1])
 
-            resume_global_step = global_step * args.gradient_accumulation_steps
-            first_epoch = global_step // num_update_steps_per_epoch
-            resume_step = resume_global_step % (num_update_steps_per_epoch * args.gradient_accumulation_steps)
+    #         resume_global_step = global_step * args.gradient_accumulation_steps
+    #         first_epoch = global_step // num_update_steps_per_epoch
+    #         resume_step = resume_global_step % (num_update_steps_per_epoch * args.gradient_accumulation_steps)
 
     # Only show the progress bar once on each machine.
     progress_bar = tqdm(range(global_step, args.max_train_steps), disable=not accelerator.is_local_main_process)
@@ -912,10 +915,10 @@ def main():
             GPT2.train()
         for step, batch in enumerate(train_dataloader):
             # Skip steps until we reach the resumed step
-            if args.resume_from_checkpoint and epoch == first_epoch and step < resume_step:
-                if step % args.gradient_accumulation_steps == 0:
-                    progress_bar.update(1)
-                continue
+            # if args.resume_from_checkpoint and epoch == first_epoch and step < resume_step:
+            #     if step % args.gradient_accumulation_steps == 0:
+            #         progress_bar.update(1)
+            #     continue
             with accelerator.accumulate(unet):
                 # print("batch[mel]",batch["mel"].shape)
                 # Convert audios to latent space
@@ -924,12 +927,8 @@ def main():
                 latents = latents * vae.config.scaling_factor
                 
                 # Sample noise that we'll add to the latents
-                if args.offset_noise:
-                    noise = torch.randn_like(latents) + 0.1 * torch.randn(
-                        latents.shape[0], latents.shape[1], 1, 1, device=latents.device
-                    )
-                else:
-                    noise = torch.randn_like(latents)
+            
+                noise = torch.randn_like(latents)
               
                 bsz, channels, height, width = latents.shape
                 # Sample a random timestep for each image
@@ -965,10 +964,6 @@ def main():
                     LOA_embed = model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)
                     LOA_embed = LOA_embed[0].unsqueeze(1)
                     generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=2)
-                with open('grad_param_ipadapter1.txt', 'w') as file:
-                    for name, param in unet.named_parameters():
-                        if param.requires_grad:
-                            file.writelines(name)
                 # print("noisy_latents.shape",noisy_latents.shape)
                 model_pred = unet(
                     noisy_latents,
@@ -986,11 +981,6 @@ def main():
                     raise ValueError(f"Unknown prediction type {noise_scheduler.config.prediction_type}")
 
                 loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
-                with open('grad_param_ipadapter0.txt', 'w') as file:
-                    for name, param in unet.named_parameters():
-                        if param.requires_grad:
-                            file.writelines(name)
-                    # print("loss.requires_grad",loss.requires_grad)
                 # import pdb; pdb.set_trace()
 
                 accelerator.backward(loss)

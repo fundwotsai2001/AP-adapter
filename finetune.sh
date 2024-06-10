@@ -17,7 +17,7 @@ accelerate launch train_apadapter_v2.py \
 --num_vectors=1 \
 --checkpointing_steps=1000 \
 --apadapter=True \
-# --resume_from_checkpoint "/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v3/checkpoint-27000/pytorch_model.bin"
+--resume_from_checkpoint "pytorch_model.bin"
 # --train_gpt2 \
 # --train_text_encoder \
 # --with_prior_preservation \
