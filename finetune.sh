@@ -16,7 +16,7 @@ accelerate launch train_ipadapter_v2.py \
 --num_validation_audio_files=1 \
 --checkpointing_steps=2000 \
 --apadapter=True \
---resume_from_checkpoint "/home/fundwotsai/DreamSound/audioldm2-large-ipadapter-audioset-unet-random-pooling_v3/checkpoint-27000/pytorch_model.bin" \
+--resume_from_checkpoint "./pytorch_model.bin" \
 --dataloader_num_workers 4 \
 # --use_8bit_adam \
 # --mixed_precision "bf16" \
