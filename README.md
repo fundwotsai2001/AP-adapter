@@ -61,3 +61,14 @@ Or you can start from the previously downloaded checkpoint [AP-adpater](https://
 ##change the DATA_DIR and OUTPUT_DIR in finetune.sh, and run
 ./finetune.sh
 ```
+Note that the settings in train.sh and finetune.sh are for users that have VRAM more than 24GB, if you have lower VRAM, you can uncomment these two arguments:
+```
+--use_8bit_adam \
+--mixed_precision "bf16" \ 
+## or you can also use "fp16"
+```
+Or simply use a lower batchsize:
+```
+## choose a moderate size
+--train_batch_size= 1 
+```

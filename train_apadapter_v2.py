@@ -10,6 +10,7 @@ import os
 import json
 import numpy as np
 import torch
+from torch.utils.data import DataLoader
 import torch.nn.functional as F
 import torch.utils.checkpoint
 import transformers
@@ -71,7 +72,7 @@ def parse_args():
         "--apadapter",
         default=False,
         required=False,
-        help="use apadapter or not",
+        help="use ipadapter or not",
     )
     parser.add_argument(
         "--train_data_dir", type=str, default=None, required=False, help="A folder containing the training data."
@@ -347,6 +348,7 @@ def list_elements_as_string(my_list):
 class AudioInversionDataset(Dataset):
     def __init__(
         self,
+        train_batch_size,
         data_root,
         instance_prompt,
         tokenizer,
@@ -361,7 +363,8 @@ class AudioInversionDataset(Dataset):
         augment_data=False,
         mix_data=False,
         snr=None,
-    ):  
+    ):
+        self.train_batch_size = train_batch_size
         self.data_root = data_root
         self.instance_prompt = instance_prompt
         self.tokenizer = tokenizer
@@ -376,10 +379,13 @@ class AudioInversionDataset(Dataset):
         self.snr = snr
         self.device = device
         self.data_pairs = []
+        self.pool_list = [1, 2, 4, 8]
+        self.pooling_rate = random.choice(self.pool_list)
         self._prepare_dataset()
-        
+    
     def get_data_pairs(self):
         return self.data_pairs
+    
     def _prepare_dataset(self):
         for root, dirs, files in os.walk(self.data_root):
             for file in files:
@@ -387,26 +393,24 @@ class AudioInversionDataset(Dataset):
                     json_path = os.path.join(root, file)
                     with open(json_path, 'r') as f:
                         metadata = json.load(f)
-                        audio_path = os.path.join('/home/fundwotsai/DreamSound/Fast-Audioset-Download', metadata['path'])
-                        # check_wav_file(audio_path)
+                        audio_path = os.path.join('./Fast-Audioset-Download', metadata['path'])
                         labels = metadata['labels']
-                        # print("audio_path", audio_path)
                         if os.path.exists(audio_path):
                             self.data_pairs.append((labels, audio_path))
+    
     def __len__(self):
         return len(self.data_pairs)
 
     def __getitem__(self, i):
         example = {}
         labels, audio_path = self.data_pairs[i]
-        example["mel"]=wav_to_mel(
+        example["mel"] = wav_to_mel(
             audio_path,
             self.duration,
             augment_data=self.augment_data,
             mix_data=self.mix_data,
             snr=self.snr
         )
-        rand_num = random.random()
         audioset_templates_small = [
             "a recording of a {}",
             "a {} recording",
@@ -423,69 +427,126 @@ class AudioInversionDataset(Dataset):
             "the voice of a {}",
             "a voice of the {}",
             "a synthesized {} voice",
-
         ]
         labels = list_elements_as_string(labels)
         text = random.choice(audioset_templates_small).format(labels)
-        # print("text",text)
-        example["ta_kaldi_fbank"] = get_audio_embeds(wav_file=audio_path)
-        rand_num = random.random()
-        if rand_num < 0.05:
-            text = ""
-        prompt_embeds, attention_mask, generated_prompt_embeds = self.audioldmpipeline.encode_prompt(
-            prompt=text,
-            device=self.device,
-            negative_prompt = "worst quality, low quality",
-            num_waveforms_per_prompt=1,
-            do_classifier_free_guidance=False
-        )
-        example["prompt_embeds"], example["attention_mask"], example["generated_prompt_embeds"] = prompt_embeds, attention_mask, generated_prompt_embeds
+        example["text"] = text
+        example["audio_path"] = audio_path
+        example["pipeline"] = self.audioldmpipeline
         return example
-def collate_fn(examples):
-    mels=[example["mel"] for example in examples]
-    ta_kaldi_fbank=[example["ta_kaldi_fbank"] for example in examples]
-    prompt_embeds=[example["prompt_embeds"] for example in examples]
-    attention_mask = [example["attention_mask"] for example in examples]
-    generated_prompt_embeds = [example["generated_prompt_embeds"] for example in examples]
-    max_length = max(embed.size(1) for embed in prompt_embeds)
-    mask_max_length = max(mask.size(1) for mask in attention_mask)
-    num_features = prompt_embeds[0].size(2)
-    # Pad each tensor to the max size and collect them in a list
-    padded_embeds = []
-    padded_masks = []
-    for embed in prompt_embeds:
-        # Calculate padding size
-        pad_size = max_length - embed.size(1)
-        # Apply padding
-        pad = torch.full((1, pad_size, num_features), 0, dtype=embed.dtype, device=embed.device)
-        # print("embed.size()",embed.size())
-        # print("pad.size()",pad.size())
-        padded_embed = torch.cat([embed, pad], dim=1)
-        # print("padded_embed.size()",padded_embed.size())
-        padded_embeds.append(padded_embed)
-    for mask in attention_mask:
-        # Calculate padding size
-        pad_size = mask_max_length - mask.size(1)
-        # Apply padding
-        pad = torch.full((1, pad_size), 0, dtype=mask.dtype, device=mask.device)
-        padded_mask = torch.cat([mask, pad], dim=1)
-        # print("padded_mask.size()",padded_mask.size())
-        padded_masks.append(padded_mask)
+class CollateFunction:
+    def __init__(self, weight_type):
+        self.model = AudioMAEConditionCTPoolRand().cuda()
+        self.weight_type = weight_type
+        self.model = self.model.to(weight_type)
+    def __call__(self, examples):
+        mels = [example["mel"] for example in examples]
+        prompt_texts = [example["text"] for example in examples]
+        audio_paths = [example["audio_path"] for example in examples]
+        # print("audio_paths",len(audio_paths))
+        # Perform batching and run AudioMAEConditionCTPoolRand in a batched manner
+        mel_spect_tensors = [get_audio_embeds(wav_file=audio_path).to(self.weight_type) for audio_path in audio_paths]
+        # print("mel_spect_tensors",len(mel_spect_tensors))
+        # mel_spect_tensors = torch.stack(mel_spect_tensors).unsqueeze(1)
+        # print("mel_spect_tensors shape", mel_spect_tensors.shape)
+        # model = AudioMAEConditionCTPoolRand().cuda()
+        # model = model.to(torch.bfloat16)
+        self.model.eval()
 
-    mels = torch.stack(mels)
-    mels = mels.to(memory_format=torch.contiguous_format).float()
-    ta_kaldi_fbank = torch.stack(ta_kaldi_fbank)
-    prompt_embeds = torch.stack(padded_embeds)
-    attention_mask = torch.stack(padded_masks)
-    generated_prompt_embeds = torch.stack(generated_prompt_embeds)
-    batch = {
-        "mel": mels,
-        "ta_kaldi_fbank" : ta_kaldi_fbank,
-        "prompt_embeds": prompt_embeds,
-        "attention_mask": attention_mask,
-        "generated_prompt_embeds": generated_prompt_embeds,
-    }
-    return batch
+        pool_list = [1, 2, 4, 8]
+        pooling_rate = random.choice(pool_list)
+        # print("pooling_rate",pooling_rate)
+        prompt_embeds_list, attention_mask_list, generated_prompt_embeds_list = [], [], []
+        with torch.no_grad():
+            for i, mel_spect_tensor in enumerate(mel_spect_tensors):
+                text = prompt_texts[i]
+                rand_num = random.random()
+                mel_spect_tensor = mel_spect_tensor.unsqueeze(0)
+                if rand_num < 0.05:
+                    text = ""
+                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
+                        prompt=text,
+                        device="cuda",
+                        negative_prompt="worst quality, low quality",
+                        num_waveforms_per_prompt=1,
+                        do_classifier_free_guidance=False
+                    )
+                    LOA_embed = self.model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)[0]
+                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=1)
+                elif rand_num < 0.1:
+                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
+                        prompt=text,
+                        device="cuda",
+                        negative_prompt="worst quality, low quality",
+                        num_waveforms_per_prompt=1,
+                        do_classifier_free_guidance=False
+                    )
+                    uncond_LOA_embed = self.model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)[0]
+                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=1)
+                elif rand_num < 0.15:
+                    text = ""
+                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
+                        prompt=text,
+                        device="cuda",
+                        negative_prompt="worst quality, low quality",
+                        num_waveforms_per_prompt=1,
+                        do_classifier_free_guidance=False
+                    )
+                    uncond_LOA_embed = self.model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)[0]
+                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=1)
+                else:
+                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
+                        prompt=text,
+                        device="cuda",
+                        negative_prompt="worst quality, low quality",
+                        num_waveforms_per_prompt=1,
+                        do_classifier_free_guidance=False
+                    )
+                    LOA_embed = self.model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)[0]
+                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=1)
+
+                prompt_embeds_list.append(prompt_embeds)
+                attention_mask_list.append(attention_mask)
+                generated_prompt_embeds_list.append(generated_prompt_embeds)
+        max_length = max(embed.size(1) for embed in prompt_embeds_list)
+        # print("attention_mask length", len(attention_mask))
+        # print("attention_mask shape", attention_mask[0].shape)
+        mask_max_length = max(mask.size(1) for mask in attention_mask_list)
+        num_features = prompt_embeds_list[0].size(2)
+        # Pad each tensor to the max size and collect them in a list
+        padded_embeds = []
+        padded_masks = []
+        for embed in prompt_embeds_list:
+            # Calculate padding size
+            pad_size = max_length - embed.size(1)
+            # Apply padding
+            pad = torch.full((1, pad_size, num_features), 0, dtype=embed.dtype, device=embed.device)
+            # print("embed.size()",embed.size())
+            # print("pad.size()",pad.size())
+            padded_embed = torch.cat([embed, pad], dim=1)
+            # print("padded_embed.size()",padded_embed.size())
+            padded_embeds.append(padded_embed)
+        for mask in attention_mask_list:
+            # Calculate padding size
+            pad_size = mask_max_length - mask.size(1)
+            # Apply padding
+            pad = torch.full((1, pad_size), 0, dtype=mask.dtype, device=mask.device)
+            padded_mask = torch.cat([mask, pad], dim=1)
+            # print("padded_mask.size()",padded_mask.size())
+            padded_masks.append(padded_mask)
+        mels = torch.stack(mels).to(memory_format=torch.contiguous_format).float()
+        prompt_embeds = torch.stack(padded_embeds)
+        attention_mask = torch.stack(padded_masks)
+        generated_prompt_embeds = torch.stack(generated_prompt_embeds_list)
+
+        batch = {
+            "mel": mels,
+            "prompt_embeds": prompt_embeds,
+            "attention_mask": attention_mask,
+            "generated_prompt_embeds": generated_prompt_embeds,
+        }
+        return batch
+
 
 def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer, unet, vae, args, accelerator, weight_dtype, global_step,vocoder, validate_experiments=False):
     # Select a random file
@@ -495,19 +556,16 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     audioset_templates_small = [
             "a recording of a {}",
             "a {} recording",
-            "a synthesized {} audio",
             "a cropped recording of the {}",
             "the recording of a {}",
             "my {} recording",
             "the {} recording",
             "a rendition of the {}",
-            "a synthesized {} rendition",
             "the sound of a {}",
             "the sound of {}",
             "the voice of {}",
             "the voice of a {}",
             "a voice of the {}",
-            "a synthesized {} voice",
 
         ]
     args.validation_prompt = random.choice(audioset_templates_small).format(labels)
@@ -521,10 +579,12 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     # import scipy
     # run inference
     generator = None if args.seed is None else torch.Generator(device=accelerator.device).manual_seed(args.seed)
+    pooling_list= [1,2,4,8]
+    pooling_rate = random.choice(pooling_list)
     audios = []
     for _ in range(args.num_validation_audio_files):
         print("validation_prompt: {}".format(args.validation_prompt))
-        audio_gen = pipeline(audio_file = random_file, prompt = args.validation_prompt,negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]
+        audio_gen = pipeline(audio_file = random_file, prompt = args.validation_prompt,negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0,time_pooling = pooling_rate,freq_pooling = pooling_rate).audios[0]
         # blening = pipeline(audio_file = "/home/fundwotsai/DreamSound/audioset/seg_audio/cutvalid_z8Wjdss5uMg_Reverberation, Music, Piano, Inside, small room.wav", prompt = "played with violin, two instrument duet",negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]        
         audios.append(audio_gen)
         # audios.append(blening)
@@ -532,7 +592,7 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
         os.makedirs(val_audio_dir, exist_ok=True)
         for i, audio in enumerate(audios):
             # scipy.io.wavfile.write(os.path.join(val_audio_dir, f"{'_'.join(args.validation_prompt.split(' '))}_{i}.wav"), rate=16000, data=audio)
-            write(os.path.join(val_audio_dir, f"{'_'.join(args.validation_prompt.split(' '))}_{i}.wav"),16000, audio)
+            write(os.path.join(val_audio_dir, f"{'_'.join(args.validation_prompt.split(' '))}_{pooling_rate}.wav"),16000, audio)
             shutil.copy(random_file, os.path.join(val_audio_dir, "original.wav"))
        
 
@@ -589,8 +649,14 @@ def main():
     if accelerator.is_main_process:
         if args.output_dir is not None:
             os.makedirs(args.output_dir, exist_ok=True)
+    weight_dtype = torch.float32
+    if accelerator.mixed_precision == "fp16":
+        weight_dtype = torch.float16
+    elif accelerator.mixed_precision == "bf16":
+        weight_dtype = torch.bfloat16
+
     audioldmpipeline= AudioLDM2Pipeline.from_pretrained(
-        args.pretrained_model_name_or_path,
+        args.pretrained_model_name_or_path, torch_dtype=weight_dtype
     ).to(accelerator.device)
     tokenizer=audioldmpipeline.tokenizer
     tokenizer_2=audioldmpipeline.tokenizer_2
@@ -612,7 +678,6 @@ def main():
     vocoder.requires_grad_(False)
     projection_model.requires_grad_(False)
     unet.requires_grad_(False)
-    do_copy = True if args.resume_from_checkpoint == None else False
     if args.apadapter:
         print("use apadapter")
         # Set correct lora layers
@@ -620,6 +685,7 @@ def main():
         i = 0
         cross = [None,None,768,768,1024,1024,None,None]
         unet_sd = unet.state_dict()
+        do_copy = False if args.resume_from_checkpoint is not None else True
         for name in unet.attn_processors.keys():
             cross_attention_dim = None if name.endswith("attn1.processor") else unet.config.cross_attention_dim
             if name.startswith("mid_block"):
@@ -772,6 +838,7 @@ def main():
 
     # Dataset and DataLoaders creation:
     train_dataset = AudioInversionDataset(
+        train_batch_size = args.train_batch_size,
         data_root=args.train_data_dir,
         instance_prompt=args.validation_prompt,
         tokenizer=tokenizer,
@@ -784,12 +851,13 @@ def main():
     outside_data_pairs = train_dataset.get_data_pairs()
     # print("length",len(train_dataset))
     # DataLoader
-    train_dataloader = torch.utils.data.DataLoader(
+    collate_fn = CollateFunction(weight_dtype)
+    train_dataloader = DataLoader(
         train_dataset,
         batch_size=args.train_batch_size,
-        shuffle=True,
+        shuffle=False,
         collate_fn=collate_fn,
-        num_workers=4,
+        num_workers=args.dataloader_num_workers,
     )
     if args.validation_epochs is not None:
         warnings.warn(
@@ -836,13 +904,9 @@ def main():
 
     # For mixed precision training we cast all non-trainable weigths (vae, non-lora text_encoder and non-lora unet) to half-precision
     # as these weights are only used for inference, keeping weights in full precision is not required.
-    weight_dtype = torch.float32
-    if accelerator.mixed_precision == "fp16":
-        weight_dtype = torch.float16
-    elif accelerator.mixed_precision == "bf16":
-        weight_dtype = torch.bfloat16
-
+    
     # Move vae and unet to device and cast to weight_dtype
+    # projection_model.to(accelerator.device, dtype=weight_dtype)
     vae.to(accelerator.device, dtype=weight_dtype)
     if not args.train_text_encoder and text_encoder is not None:
         text_encoder.to(accelerator.device, dtype=weight_dtype)
@@ -914,6 +978,8 @@ def main():
         if args.train_gpt2:
             GPT2.train()
         for step, batch in enumerate(train_dataloader):
+            # print("pooling rate in loop:", train_dataloader.dataset.pooling_rate)
+            # print(f"Processing batch {step+1}")
             # Skip steps until we reach the resumed step
             # if args.resume_from_checkpoint and epoch == first_epoch and step < resume_step:
             #     if step % args.gradient_accumulation_steps == 0:
@@ -939,11 +1005,9 @@ def main():
                 # (this is the forward diffusion process)
                 # latent_model_input = torch.cat([latents] * 2)
                 noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
-                mel_spect_tensor = batch["ta_kaldi_fbank"]
+                # mel_spect_tensor = batch["ta_kaldi_fbank"]
                 # mel_spect_tensor = ta_kaldi_fbank.unsqueeze(0)
                 # print("mel_spect_tensor.shape",mel_spect_tensor.shape)
-                model = AudioMAEConditionCTPoolRand().cuda()
-                model.eval()
                 # print(LOA_embed[0].size(),uncond_LOA_embed[0].size())
                 # Get the text embedding for conditioning
                 prompt_embeds = batch["prompt_embeds"]
@@ -953,17 +1017,19 @@ def main():
                 # print('generated_prompt_embeds.shape',generated_prompt_embeds.shape)
                 attention_mask=batch["attention_mask"]
                 attention_mask=attention_mask.squeeze(-2)
-                rand_num = random.random()
-                pool_list = [1,2,4,8]
-                pooling_rate = random.choice(pool_list)
-                if rand_num < 0.05:
-                    uncond_LOA_embed = model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)
-                    uncond_LOA_embed = uncond_LOA_embed[0].unsqueeze(1)
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=2)
-                else:
-                    LOA_embed = model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)
-                    LOA_embed = LOA_embed[0].unsqueeze(1)
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=2)
+                # model = AudioMAEConditionCTPoolRand().cuda()
+                # model.eval()
+                # rand_num = random.random()
+                # pool_list = [1,2,4,8]
+                # pooling_rate = random.choice(pool_list)
+                # if rand_num < 0.05:
+                #     uncond_LOA_embed = model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)
+                #     uncond_LOA_embed = uncond_LOA_embed[0].unsqueeze(1)
+                #     generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=2)
+                # else:
+                #     LOA_embed = model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)
+                #     LOA_embed = LOA_embed[0].unsqueeze(1)
+                #     generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=2)
                 # print("noisy_latents.shape",noisy_latents.shape)
                 model_pred = unet(
                     noisy_latents,
@@ -981,6 +1047,7 @@ def main():
                     raise ValueError(f"Unknown prediction type {noise_scheduler.config.prediction_type}")
 
                 loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
+                    # print("loss.requires_grad",loss.requires_grad)
                 # import pdb; pdb.set_trace()
 
                 accelerator.backward(loss)
