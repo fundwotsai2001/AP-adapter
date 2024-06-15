@@ -353,11 +353,9 @@ class AudioInversionDataset(Dataset):
         instance_prompt,
         tokenizer,
         device,
-        audioldmpipeline,
         learnable_property="object",  # [object, style, minimal]
         sample_rate=16000,
         duration=2.0,
-        set="train",
         instance_word=None,
         class_name=None,
         augment_data=False,
@@ -373,7 +371,6 @@ class AudioInversionDataset(Dataset):
         self.duration = duration
         self.instance_word = instance_word
         self.class_name = class_name
-        self.audioldmpipeline = audioldmpipeline
         self.augment_data = augment_data
         self.mix_data = mix_data
         self.snr = snr
@@ -393,7 +390,7 @@ class AudioInversionDataset(Dataset):
                     json_path = os.path.join(root, file)
                     with open(json_path, 'r') as f:
                         metadata = json.load(f)
-                        audio_path = os.path.join('./Fast-Audioset-Download', metadata['path'])
+                        audio_path = os.path.join('/home/fundwotsai/DreamSound/Fast-Audioset-Download', metadata['path'])
                         labels = metadata['labels']
                         if os.path.exists(audio_path):
                             self.data_pairs.append((labels, audio_path))
@@ -432,13 +429,13 @@ class AudioInversionDataset(Dataset):
         text = random.choice(audioset_templates_small).format(labels)
         example["text"] = text
         example["audio_path"] = audio_path
-        example["pipeline"] = self.audioldmpipeline
         return example
 class CollateFunction:
-    def __init__(self, weight_type):
+    def __init__(self, weight_type,audioldmpipeline):
         self.model = AudioMAEConditionCTPoolRand().cuda()
         self.weight_type = weight_type
         self.model = self.model.to(weight_type)
+        self.audioldmpipeline = audioldmpipeline
     def __call__(self, examples):
         mels = [example["mel"] for example in examples]
         prompt_texts = [example["text"] for example in examples]
@@ -452,93 +449,35 @@ class CollateFunction:
         # model = AudioMAEConditionCTPoolRand().cuda()
         # model = model.to(torch.bfloat16)
         self.model.eval()
-
         pool_list = [1, 2, 4, 8]
         pooling_rate = random.choice(pool_list)
-        # print("pooling_rate",pooling_rate)
-        prompt_embeds_list, attention_mask_list, generated_prompt_embeds_list = [], [], []
+        # print("pooling_rate",pooling_rate)        
+        for i in range(len(prompt_texts)):
+            rand_num = random.random()
+            if rand_num < 0.05:
+                prompt_texts[i] = ""
+            elif rand_num < 0.1:
+                mel_spect_tensors[i] = torch.zeros_like(mel_spect_tensors[i])
+            elif rand_num < 0.15:
+                prompt_texts[i] = ""
+                mel_spect_tensors[i] = torch.zeros_like(mel_spect_tensors[i])
+        # print("prompt_texts",prompt_texts)
+        # print("mel_spect_tensors",mel_spect_tensors.shape)
+        mel_spect_tensors = torch.stack(mel_spect_tensors)
+        # print("mel_spect_tensors",mel_spect_tensors.shape)
         with torch.no_grad():
-            for i, mel_spect_tensor in enumerate(mel_spect_tensors):
-                text = prompt_texts[i]
-                rand_num = random.random()
-                mel_spect_tensor = mel_spect_tensor.unsqueeze(0)
-                if rand_num < 0.05:
-                    text = ""
-                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
-                        prompt=text,
+            prompt_embeds, attention_mask, generated_prompt_embeds = self.audioldmpipeline.encode_prompt(
+                        prompt=prompt_texts,
                         device="cuda",
                         negative_prompt="worst quality, low quality",
                         num_waveforms_per_prompt=1,
                         do_classifier_free_guidance=False
                     )
-                    LOA_embed = self.model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)[0]
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=1)
-                elif rand_num < 0.1:
-                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
-                        prompt=text,
-                        device="cuda",
-                        negative_prompt="worst quality, low quality",
-                        num_waveforms_per_prompt=1,
-                        do_classifier_free_guidance=False
-                    )
-                    uncond_LOA_embed = self.model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)[0]
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=1)
-                elif rand_num < 0.15:
-                    text = ""
-                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
-                        prompt=text,
-                        device="cuda",
-                        negative_prompt="worst quality, low quality",
-                        num_waveforms_per_prompt=1,
-                        do_classifier_free_guidance=False
-                    )
-                    uncond_LOA_embed = self.model(torch.zeros_like(mel_spect_tensor), time_pool=pooling_rate, freq_pool=pooling_rate)[0]
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, uncond_LOA_embed), dim=1)
-                else:
-                    prompt_embeds, attention_mask, generated_prompt_embeds = examples[i]["pipeline"].encode_prompt(
-                        prompt=text,
-                        device="cuda",
-                        negative_prompt="worst quality, low quality",
-                        num_waveforms_per_prompt=1,
-                        do_classifier_free_guidance=False
-                    )
-                    LOA_embed = self.model(mel_spect_tensor, time_pool=pooling_rate, freq_pool=pooling_rate)[0]
-                    generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=1)
-
-                prompt_embeds_list.append(prompt_embeds)
-                attention_mask_list.append(attention_mask)
-                generated_prompt_embeds_list.append(generated_prompt_embeds)
-        max_length = max(embed.size(1) for embed in prompt_embeds_list)
-        # print("attention_mask length", len(attention_mask))
-        # print("attention_mask shape", attention_mask[0].shape)
-        mask_max_length = max(mask.size(1) for mask in attention_mask_list)
-        num_features = prompt_embeds_list[0].size(2)
-        # Pad each tensor to the max size and collect them in a list
-        padded_embeds = []
-        padded_masks = []
-        for embed in prompt_embeds_list:
-            # Calculate padding size
-            pad_size = max_length - embed.size(1)
-            # Apply padding
-            pad = torch.full((1, pad_size, num_features), 0, dtype=embed.dtype, device=embed.device)
-            # print("embed.size()",embed.size())
-            # print("pad.size()",pad.size())
-            padded_embed = torch.cat([embed, pad], dim=1)
-            # print("padded_embed.size()",padded_embed.size())
-            padded_embeds.append(padded_embed)
-        for mask in attention_mask_list:
-            # Calculate padding size
-            pad_size = mask_max_length - mask.size(1)
-            # Apply padding
-            pad = torch.full((1, pad_size), 0, dtype=mask.dtype, device=mask.device)
-            padded_mask = torch.cat([mask, pad], dim=1)
-            # print("padded_mask.size()",padded_mask.size())
-            padded_masks.append(padded_mask)
+            LOA_embed = self.model(mel_spect_tensors, time_pool=pooling_rate, freq_pool=pooling_rate)[0]
+            # print("generated_prompt_embeds",generated_prompt_embeds.shape)
+            # print("LOA_embed", LOA_embed.shape)
+            generated_prompt_embeds = torch.cat((generated_prompt_embeds, LOA_embed), dim=1)
         mels = torch.stack(mels).to(memory_format=torch.contiguous_format).float()
-        prompt_embeds = torch.stack(padded_embeds)
-        attention_mask = torch.stack(padded_masks)
-        generated_prompt_embeds = torch.stack(generated_prompt_embeds_list)
-
         batch = {
             "mel": mels,
             "prompt_embeds": prompt_embeds,
@@ -704,6 +643,7 @@ def main():
                 i = i + 1
                 if cross_attention_dim == 768:
                     attn_procs[name] = IPAttnProcessor2_0(
+                        weight_type = weight_dtype,
                         hidden_size=hidden_size,
                         name = name,
                         cross_attention_dim=cross_attention_dim,
@@ -844,14 +784,12 @@ def main():
         tokenizer=tokenizer,
         sample_rate=args.sample_rate,
         duration=args.duration,
-        set="train",
         device=accelerator.device,
-        audioldmpipeline=audioldmpipeline,
     )
     outside_data_pairs = train_dataset.get_data_pairs()
     # print("length",len(train_dataset))
     # DataLoader
-    collate_fn = CollateFunction(weight_dtype)
+    collate_fn = CollateFunction(weight_dtype, audioldmpipeline)
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=args.train_batch_size,
@@ -939,32 +877,6 @@ def main():
     global_step = 0
     first_epoch = 0
 
-    # Potentially load in the weights and states from a previous save
-    # if args.resume_from_checkpoint:
-    #     if args.resume_from_checkpoint != "latest":
-    #         path = os.path.basename(args.resume_from_checkpoint)
-    #     else:
-    #         # Get the most recent checkpoint
-    #         dirs = os.listdir(args.output_dir)
-    #         dirs = [d for d in dirs if d.startswith("checkpoint")]
-    #         dirs = sorted(dirs, key=lambda x: int(x.split("-")[1]))
-    #         path = dirs[-1] if len(dirs) > 0 else None
-
-    #     if path is None:
-    #         accelerator.print(
-    #             f"Checkpoint '{args.resume_from_checkpoint}' does not exist. Starting a new training run."
-    #         )
-    #         args.resume_from_checkpoint = None
-    #         # if we're not going to resume from checkpoint, we need to save the initial embeddings
-    #     else:
-    #         accelerator.print(f"Resuming from checkpoint {path}")
-    #         accelerator.load_state(os.path.join(args.output_dir, path))
-    #         global_step = int(path.split("-")[1])
-
-    #         resume_global_step = global_step * args.gradient_accumulation_steps
-    #         first_epoch = global_step // num_update_steps_per_epoch
-    #         resume_step = resume_global_step % (num_update_steps_per_epoch * args.gradient_accumulation_steps)
-
     # Only show the progress bar once on each machine.
     progress_bar = tqdm(range(global_step, args.max_train_steps), disable=not accelerator.is_local_main_process)
     progress_bar.set_description("Steps")
@@ -1048,7 +960,7 @@ def main():
 
                 loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
                     # print("loss.requires_grad",loss.requires_grad)
-                # import pdb; pdb.set_trace()
+                
 
                 accelerator.backward(loss)
                 if accelerator.sync_gradients:
