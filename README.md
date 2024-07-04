@@ -34,7 +34,7 @@ It's also recommend to train from scratch if you have powerful computation resou
 We only use 200k audio-text pairs from Audioset due to memory capacity. 
 To use our training code, you can use https://github.com/dlrudco/Fast-Audioset-Download to download the dataset, and put "Fast-Audioset-Download" in the way below.
 ```
-AP-ADAPTER-FULL/
+AP-ADAPTER/
 ├── pycache/
 ├── pipeline/
 ├── APadapter/
