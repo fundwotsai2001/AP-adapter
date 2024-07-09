@@ -4,8 +4,8 @@ This is the official implementation of AP-adapter. Please give me a star if you 
 We provide a step by step series of examples that tell you how to get a development environment running.
 
 ```bash
-git clone https://github.com/fundwotsai2001/AP-adapter-full.git
-cd AP-adapter-full
+git clone https://github.com/fundwotsai2001/AP-adapter.git
+cd AP-adapter
 ```
 ## Downloading checkpoint
 For AudioMAE checkpoint you can download it from 
