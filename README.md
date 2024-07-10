@@ -1,5 +1,7 @@
 # AP-adapter
-This is the official implementation of AP-adapter. Please give me a star if you found this project useful~
+This is the official implementation of AP-adapter, arxiv preprint will be uploaded soon.
+Fang-Duo Tsai, Shih-Lun Wu, Haven Kim, Bo-Yu Chen, Hao-Chung Cheng, and Yi-Hsuan Yang, "Audio Prompt Adapter: Unleashing music editing abilities for text-to-music with lightweight finetuning," in Proc. Int. Society for Music Information Retrieval Conf. (ISMIR), 2024.
+Please give me a star if you found this project useful~
 ## Installation
 We provide a step by step series of examples that tell you how to get a development environment running.
 
@@ -72,3 +74,4 @@ Or simply use a lower batchsize:
 ## choose a moderate size
 --train_batch_size= 1 
 ```
+
