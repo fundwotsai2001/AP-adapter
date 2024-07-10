@@ -1,6 +1,7 @@
 # AP-adapter
-This is the official implementation of AP-adapter, arxiv preprint will be uploaded soon.
-Please give me a star if you found this project useful~
+This is the official implementation of AP-adapter, arxiv preprint will be uploaded soon.\
+[Demo page](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820)\
+Please give me a star if you found this project useful~\
 
 ## Installation
 We provide a step by step series of examples that tell you how to get a development environment running.
