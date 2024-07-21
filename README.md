@@ -1,10 +1,10 @@
 # AP-adapter
 This is the official implementation of AP-adapter, arxiv preprint will be uploaded soon.\
-[Demo page](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820)\
-Please give me a star if you found this project useful~\
+[Demo website](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820) | [Demo video](https://youtu.be/fr9rCSaYUlA?si=3tV4zGriIrW8yylF)\
+Please give me a star if you found this project useful or inspiring~
 
 ## Installation
-We provide a step by step series of examples that tell you how to get a development environment running.
+We provide a step-by-step series of examples that explain how to set up a development environment.
 
 ```bash
 git clone https://github.com/fundwotsai2001/AP-adapter.git
@@ -75,4 +75,6 @@ Or simply use a lower batchsize:
 ## choose a moderate size
 --train_batch_size= 1 
 ```
+## Acknowledgments
+This code is heavily based on [AudioLDM2](https://huggingface.co/docs/diffusers/main/en/api/pipelines/audioldm2#diffusers.AudioLDM2UNet2DConditionModel), [Diffusers](https://github.com/huggingface/diffusers), and [IP-adapter](https://github.com/tencent-ailab/IP-Adapter).
 
