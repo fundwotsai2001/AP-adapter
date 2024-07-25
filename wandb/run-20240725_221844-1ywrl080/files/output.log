@@ -1,0 +1,56 @@
+07/25/2024 22:18:50 - INFO - __main__ - ***** Running training *****
+07/25/2024 22:18:50 - INFO - __main__ -   Num examples = 1706868
+07/25/2024 22:18:50 - INFO - __main__ -   Num Epochs = 17
+07/25/2024 22:18:50 - INFO - __main__ -   Instantaneous batch size per device = 7
+07/25/2024 22:18:50 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 28
+07/25/2024 22:18:50 - INFO - __main__ -   Gradient Accumulation steps = 4
+07/25/2024 22:18:50 - INFO - __main__ -   Total optimization steps = 1000000
+Steps:   0%|                                                                                                                                                                      | 0/1000000 [00:00<?, ?it/s]
+Steps:   0%|                                                                                                                                                                      | 0/1000000 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 1051, in <module>
+    main()
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 887, in main
+    for step, batch in enumerate(train_dataloader):
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/accelerate/data_loader.py", line 454, in __iter__
+    current_batch = next(dataloader_iter)
+                    ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 633, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1345, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1371, in _process_data
+    data.reraise()
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 398, in __getitem__
+    example["mel"] = wav_to_mel(
+                     ^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 328, in wav_to_mel
+    mel, _, _ = wav_to_fbank(
+                ^^^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 290, in wav_to_fbank
+    waveform = read_wav_file(filename, target_length * 160, augment_data=augment_data)  # hop size is 160
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 256, in read_wav_file
+    waveform, sr = torchaudio.load(filename)  # Faster!!!
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torchaudio/backend/sox_io_backend.py", line 256, in load
+    return _fallback_load(filepath, frame_offset, num_frames, normalize, channels_first, format)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torchaudio/io/_compat.py", line 107, in load_audio
+    s = torch.classes.torchaudio.ffmpeg_StreamReader(src, format, None)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Failed to open the input "../Fast-Audioset-Download/wavs/unbalanced_train/000000/id_--18xICqMoU.m4a" (No such file or directory).

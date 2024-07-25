@@ -1,0 +1,168 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.9
+    cli_version: 0.17.1
+    framework: huggingface
+    huggingface_version: 4.30.2
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1721917124
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      - 63
+      - 71
+      - 83
+      - 105
+      2:
+      - 1
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      - 63
+      - 71
+      - 83
+      - 105
+      3:
+      - 23
+      4: 3.11.9
+      5: 0.17.1
+      6: 4.30.2
+      8:
+      - 5
+      13: linux-x86_64
+train_text_encoder:
+  desc: null
+  value: false
+train_gpt2:
+  desc: null
+  value: false
+save_steps:
+  desc: null
+  value: 500
+save_as_full_pipeline:
+  desc: null
+  value: false
+pretrained_model_name_or_path:
+  desc: null
+  value: cvssp/audioldm2-large
+apadapter:
+  desc: null
+  value: 'True'
+train_data_dir:
+  desc: null
+  value: /data/home/fundwotsai/Fast-Audioset-Download/audioset_unbalanced_train_metadata_clean.json
+output_dir:
+  desc: null
+  value: /data/home/fundwotsai/test_AP/AP-adapter/audioldm2-large-ipadapter-audioset-unet-random-pooling_v4
+seed:
+  desc: null
+  value: null
+sample_rate:
+  desc: null
+  value: 16000
+duration:
+  desc: null
+  value: 10.0
+train_batch_size:
+  desc: null
+  value: 7
+sample_batch_size:
+  desc: null
+  value: 4
+num_train_epochs:
+  desc: null
+  value: 17
+max_train_steps:
+  desc: null
+  value: 1000000
+gradient_accumulation_steps:
+  desc: null
+  value: 4
+gradient_checkpointing:
+  desc: null
+  value: false
+learning_rate:
+  desc: null
+  value: 0.0001
+scale_lr:
+  desc: null
+  value: false
+lr_scheduler:
+  desc: null
+  value: constant
+lr_warmup_steps:
+  desc: null
+  value: 500
+lr_num_cycles:
+  desc: null
+  value: 1
+use_8bit_adam:
+  desc: null
+  value: false
+dataloader_num_workers:
+  desc: null
+  value: 8
+adam_beta1:
+  desc: null
+  value: 0.9
+adam_beta2:
+  desc: null
+  value: 0.999
+adam_weight_decay:
+  desc: null
+  value: 0.01
+adam_epsilon:
+  desc: null
+  value: 1.0e-08
+max_grad_norm:
+  desc: null
+  value: 1.0
+mixed_precision:
+  desc: null
+  value: 'no'
+allow_tf32:
+  desc: null
+  value: false
+report_to:
+  desc: null
+  value: wandb
+validation_prompt:
+  desc: null
+  value: null
+num_validation_audio_files:
+  desc: null
+  value: 3
+validation_steps:
+  desc: null
+  value: 3000
+validation_epochs:
+  desc: null
+  value: null
+validate_experiments:
+  desc: null
+  value: false
+checkpointing_steps:
+  desc: null
+  value: 3000
+checkpoints_total_limit:
+  desc: null
+  value: null
+resume_from_checkpoint:
+  desc: null
+  value: null
+enable_xformers_memory_efficient_attention:
+  desc: null
+  value: false

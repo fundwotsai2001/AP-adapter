@@ -1,0 +1,262 @@
+{
+    "os": "Linux-6.5.0-35-generic-x86_64-with-glibc2.35",
+    "python": "3.11.9",
+    "heartbeatAt": "2024-07-25T14:22:21.418722",
+    "startedAt": "2024-07-25T14:22:20.608130",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--pretrained_model_name_or_path=cvssp/audioldm2-large",
+        "--train_data_dir=/data/home/fundwotsai/Fast-Audioset-Download/audioset_unbalanced_train_metadata_clean.json",
+        "--train_batch_size=7",
+        "--gradient_accumulation_steps=4",
+        "--max_train_steps=1000000",
+        "--learning_rate=1e-4",
+        "--output_dir=/data/home/fundwotsai/test_AP/AP-adapter/audioldm2-large-ipadapter-audioset-unet-random-pooling_v4",
+        "--validation_steps=3000",
+        "--num_validation_audio_files=3",
+        "--checkpointing_steps=3000",
+        "--apadapter=True",
+        "--dataloader_num_workers",
+        "8"
+    ],
+    "state": "running",
+    "program": "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py",
+    "codePathLocal": "train_apadapter_v2.py",
+    "codePath": "train_apadapter_v2.py",
+    "git": {
+        "remote": "https://github.com/fundwotsai2001/AP-adapter.git",
+        "commit": "a319c6bf49c417087ab1c0ff463775094488678a"
+    },
+    "email": "b08901204@ntu.edu.tw",
+    "root": "/data/home/fundwotsai/test_AP/AP-adapter",
+    "host": "quantumlab2",
+    "username": "fundwotsai",
+    "executable": "/home/fundwotsai/miniconda3/envs/apadpter/bin/python3.11",
+    "cpu_count": 20,
+    "cpu_count_logical": 40,
+    "cpu_freq": {
+        "current": 1414.5319749999996,
+        "min": 1000.0,
+        "max": 3200.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1000.007,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.073,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1077.411,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2961.22,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2099.95,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2611.161,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.388,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.029,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2896.164,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1999.993,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2000.415,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1267.153,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.011,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.018,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 3200.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2099.688,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1000.0,
+            "min": 1000.0,
+            "max": 3200.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 872.5714950561523,
+            "used": 685.2838363647461
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        }
+    ],
+    "memory": {
+        "total": 251.54486465454102
+    }
+}

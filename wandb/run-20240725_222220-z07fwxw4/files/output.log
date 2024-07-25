@@ -1,0 +1,67 @@
+07/25/2024 22:22:26 - INFO - __main__ - ***** Running training *****
+07/25/2024 22:22:26 - INFO - __main__ -   Num examples = 1706868
+07/25/2024 22:22:26 - INFO - __main__ -   Num Epochs = 17
+07/25/2024 22:22:26 - INFO - __main__ -   Instantaneous batch size per device = 7
+07/25/2024 22:22:26 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 28
+07/25/2024 22:22:26 - INFO - __main__ -   Gradient Accumulation steps = 4
+07/25/2024 22:22:26 - INFO - __main__ -   Total optimization steps = 1000000
+Steps:   0%|                                                                                                                                                                      | 0/1000000 [00:00<?, ?it/s]
+
+
+
+Steps:   0%|                                                                                                                               | 1/1000000 [02:20<38728:49:19, 139.42s/it, loss=0.0503, lr=0.0001]Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x7d2661434c20>
+Traceback (most recent call last):
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1478, in __del__
+    self._shutdown_workers()
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1442, in _shutdown_workers
+    w.join(timeout=_utils.MP_STATUS_CHECK_INTERVAL)
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/multiprocessing/popen_fork.py", line 40, in wait
+    if not wait([self.sentinel], timeout):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/multiprocessing/connection.py", line 948, in wait
+    ready = selector.select(timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt:
+Traceback (most recent call last):
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 1051, in <module>
+    main()
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 942, in main
+    model_pred = unet(
+                 ^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 670, in forward
+    return audioldmpipeline.unet(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/pipelines/audioldm2/modeling_audioldm2.py", line 857, in forward
+    sample = upsample_block(
+             ^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/unet_2d_blocks.py", line 2316, in forward
+    hidden_states = resnet(hidden_states, temb, scale=scale)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/resnet.py", line 662, in forward
+    input_tensor = self.conv_shortcut(input_tensor, scale)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/lora.py", line 163, in forward
+    return F.conv2d(
+           ^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 14.00 MiB (GPU 0; 23.69 GiB total capacity; 18.23 GiB already allocated; 10.31 MiB free; 18.37 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

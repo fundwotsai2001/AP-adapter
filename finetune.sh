@@ -1,6 +1,6 @@
 #!/bin/bash
-export DATA_DIR="/data/home/fundwotsai/Fast-Audioset-Download/audioset_unbalanced_train_metadata_clean.json"
-export OUTPUT_DIR="/data/home/fundwotsai/test_AP/AP-adapter/audioldm2-large-ipadapter-audioset-unet-random-pooling_v4"
+export DATA_DIR="/data/home/fundwotsai/Fast-Audioset-Download/audioset_unbalanced_train_metadata_clean.json" ## Change to your path
+export OUTPUT_DIR="/data/home/fundwotsai/test_AP/AP-adapter/audioldm2-large-ipadapter-audioset-unet-random-pooling_v4"  ## Change to your path
 export CUDA_VISIBLE_DEVICES=0
 export MODEL_NAME="cvssp/audioldm2-large"
 

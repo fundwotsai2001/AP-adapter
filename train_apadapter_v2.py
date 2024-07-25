@@ -386,7 +386,7 @@ class AudioInversionDataset(Dataset):
     def _prepare_dataset(self):
         with open(self.data_root, 'r') as f:
             data = json.load(f)
-            self.data_pairs = [(item['labels'], os.path.join("/data/home/fundwotsai/Fast-Audioset-Download",item['path'])) for item in data.values()]
+            self.data_pairs = [(item['labels'], os.path.join("../Fast-Audioset-Download",item['path'])) for item in data.values()]
 
     
     def __len__(self):

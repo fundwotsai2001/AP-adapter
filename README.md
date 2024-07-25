@@ -38,22 +38,8 @@ It's also recommend to train from scratch if you have powerful computation resou
 We only use 200k audio-text pairs from Audioset due to memory capacity. 
 To use our training code, you can use https://github.com/dlrudco/Fast-Audioset-Download to download the dataset, and put "Fast-Audioset-Download" in the way below.
 ```
-AP-ADAPTER/
-├── pycache/
-├── pipeline/
-├── APadapter/
-├── audio_encoder/
-├── copied_cross_attention/
+├── AP-ADAPTER/
 └── Fast-Audioset-Download/
-    ├── csvs/
-    ├── temps/
-    └── wavs/
-        ├── balanced_train/
-        ├── eval/
-        └── unbalanced_train/
-            └── 000000
-                ├── id__-5esUcUAk.json
-                └── id__-5esUcUAk.m4a
 ```
 After handling the dataset structure, you can run the command to train the adapter from scratch:
 ```
