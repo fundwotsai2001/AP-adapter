@@ -1,0 +1,54 @@
+07/25/2024 21:30:41 - INFO - __main__ - ***** Running training *****
+07/25/2024 21:30:41 - INFO - __main__ -   Num examples = 1706868
+07/25/2024 21:30:41 - INFO - __main__ -   Num Epochs = 1
+07/25/2024 21:30:41 - INFO - __main__ -   Instantaneous batch size per device = 1
+07/25/2024 21:30:41 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 1
+07/25/2024 21:30:41 - INFO - __main__ -   Gradient Accumulation steps = 1
+07/25/2024 21:30:41 - INFO - __main__ -   Total optimization steps = 1000000
+Steps:   0%|                                                                                                                                                                      | 0/1000000 [00:00<?, ?it/s]
+Steps:   0%|                                                                                                                                                                      | 0/1000000 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 1051, in <module>
+    main()
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 942, in main
+    model_pred = unet(
+                 ^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py", line 670, in forward
+    return audioldmpipeline.unet(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/pipelines/audioldm2/modeling_audioldm2.py", line 803, in forward
+    sample, res_samples = downsample_block(
+                          ^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/pipelines/audioldm2/modeling_audioldm2.py", line 1147, in forward
+    hidden_states = self.attentions[i * num_attention_per_layer + idx](
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/transformer_2d.py", line 315, in forward
+    hidden_states = block(
+                    ^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/attention.py", line 218, in forward
+    attn_output = self.attn2(
+                  ^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/fundwotsai/miniconda3/envs/apadpter/lib/python3.11/site-packages/diffusers/models/attention_processor.py", line 420, in forward
+    return self.processor(
+           ^^^^^^^^^^^^^^^
+  File "/data/home/fundwotsai/test_AP/AP-adapter/APadapter/ap_adapter/attention_processor.py", line 369, in __call__
+    if tensor.dim() < 3:
+       ^^^^^^
+UnboundLocalError: cannot access local variable 'tensor' where it is not associated with a value

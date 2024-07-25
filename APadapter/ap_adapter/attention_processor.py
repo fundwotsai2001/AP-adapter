@@ -236,6 +236,8 @@ class AttnProcessor2_0(torch.nn.Module):
         # else:
         #     print(encoder_hidden_states.shape)
         #     # encoder_hidden_states = encoder_hidden_states.squeeze(0)
+        if encoder_hidden_states is not None and encoder_hidden_states.dim() < 3:
+            encoder_hidden_states = encoder_hidden_states.unsqueeze(0)
         batch_size, sequence_length, _ = (
             hidden_states.shape if encoder_hidden_states is None else encoder_hidden_states.shape
         )
@@ -364,7 +366,10 @@ class IPAttnProcessor2_0(torch.nn.Module):
             batch_size, channel, height, width = hidden_states.shape
             hidden_states = hidden_states.view(batch_size, channel, height * width).transpose(1, 2)
         # print("hidden_states",hidden_states.shape)
-        encoder_hidden_states = encoder_hidden_states.squeeze(1)
+        # print("encoder_hidden_states",encoder_hidden_states.shape)
+        # encoder_hidden_states = encoder_hidden_states.squeeze(1)
+        if encoder_hidden_states is not None and encoder_hidden_states.dim() < 3:
+            encoder_hidden_states = encoder_hidden_states.unsqueeze(0)
         # print("encoder_hidden_states",encoder_hidden_states.shape)
         batch_size, sequence_length, _ = (
             hidden_states.shape if encoder_hidden_states is None else encoder_hidden_states.shape

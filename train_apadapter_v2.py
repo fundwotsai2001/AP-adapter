@@ -384,16 +384,10 @@ class AudioInversionDataset(Dataset):
         return self.data_pairs
     
     def _prepare_dataset(self):
-        for root, dirs, files in os.walk(self.data_root):
-            for file in files:
-                if file.endswith('.json'):
-                    json_path = os.path.join(root, file)
-                    with open(json_path, 'r') as f:
-                        metadata = json.load(f)
-                        audio_path = os.path.join('/home/fundwotsai/DreamSound/Fast-Audioset-Download', metadata['path'])
-                        labels = metadata['labels']
-                        if os.path.exists(audio_path):
-                            self.data_pairs.append((labels, audio_path))
+        with open(self.data_root, 'r') as f:
+            data = json.load(f)
+            self.data_pairs = [(item['labels'], os.path.join("/data/home/fundwotsai/Fast-Audioset-Download",item['path'])) for item in data.values()]
+
     
     def __len__(self):
         return len(self.data_pairs)
@@ -484,6 +478,7 @@ class CollateFunction:
             "attention_mask": attention_mask,
             "generated_prompt_embeds": generated_prompt_embeds,
         }
+        # print("attention_mask batch",attention_mask.shape)
         return batch
 
 
@@ -518,10 +513,11 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     # import scipy
     # run inference
     generator = None if args.seed is None else torch.Generator(device=accelerator.device).manual_seed(args.seed)
-    pooling_list= [1,2,4,8]
-    pooling_rate = random.choice(pooling_list)
+    
     audios = []
     for _ in range(args.num_validation_audio_files):
+        pooling_list= [1,2,4,8]
+        pooling_rate = random.choice(pooling_list)
         print("validation_prompt: {}".format(args.validation_prompt))
         audio_gen = pipeline(audio_file = random_file, prompt = args.validation_prompt,negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0,time_pooling = pooling_rate,freq_pooling = pooling_rate).audios[0]
         # blening = pipeline(audio_file = "/home/fundwotsai/DreamSound/audioset/seg_audio/cutvalid_z8Wjdss5uMg_Reverberation, Music, Piano, Inside, small room.wav", prompt = "played with violin, two instrument duet",negative_prompt = "worst quality, low quality",num_inference_steps=50,audio_length_in_s=10.0).audios[0]        
@@ -643,7 +639,6 @@ def main():
                 i = i + 1
                 if cross_attention_dim == 768:
                     attn_procs[name] = IPAttnProcessor2_0(
-                        weight_type = weight_dtype,
                         hidden_size=hidden_size,
                         name = name,
                         cross_attention_dim=cross_attention_dim,
@@ -928,7 +923,8 @@ def main():
                 generated_prompt_embeds=generated_prompt_embeds.squeeze(0)
                 # print('generated_prompt_embeds.shape',generated_prompt_embeds.shape)
                 attention_mask=batch["attention_mask"]
-                attention_mask=attention_mask.squeeze(-2)
+                # attention_mask=attention_mask.squeeze(-2)
+                # print("attention_mask batch after squeeze",attention_mask.shape)
                 # model = AudioMAEConditionCTPoolRand().cuda()
                 # model.eval()
                 # rand_num = random.random()

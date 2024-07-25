@@ -1,6 +1,6 @@
 # AP-adapter
-This is the official implementation of Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning, arxiv preprint will be uploaded soon.\
-[Demo website](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820) | [Demo video](https://youtu.be/fr9rCSaYUlA?si=3tV4zGriIrW8yylF)\
+This is the official implementation of paper: "Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning" in Proc. Int. Society for Music Information Retrieval Conf. (ISMIR), 2024.
+[arXiv](https://arxiv.org/abs/2407.16564) | [Demo website](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820) | [Demo video](https://youtu.be/fr9rCSaYUlA?si=3tV4zGriIrW8yylF)\
 Please give me a star if you found this project useful or inspiring~
 
 ## Installation
@@ -18,6 +18,7 @@ For AP-adapter checkpoint you can download it from
 ```
 gdown https://drive.google.com/uc?id=1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu
 gdown https://drive.google.com/uc?id=1rA1zgCdioOpUpds-CdxL8uOKTx1-cAcH
+# If the command doesn't work, you may consider upgrade gdown, ex. pip install gdown --upgrade
 ```
 
 
@@ -74,6 +75,18 @@ Or simply use a lower batchsize:
 ```
 ## choose a moderate size
 --train_batch_size= 1 
+```
+## Cite this work
+```
+@misc{tsai2024audiopromptadapterunleashing,
+      title={Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning}, 
+      author={Fang-Duo Tsai and Shih-Lun Wu and Haven Kim and Bo-Yu Chen and Hao-Chung Cheng and Yi-Hsuan Yang},
+      year={2024},
+      eprint={2407.16564},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2407.16564}, 
+}
 ```
 ## Acknowledgments
 This code is heavily based on [AudioLDM2](https://huggingface.co/docs/diffusers/main/en/api/pipelines/audioldm2#diffusers.AudioLDM2UNet2DConditionModel), [Diffusers](https://github.com/huggingface/diffusers), and [IP-adapter](https://github.com/tencent-ailab/IP-Adapter).

@@ -1,0 +1,30 @@
+2024-07-25 21:30:36,258 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Current SDK version is 0.17.1
+2024-07-25 21:30:36,258 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Configure stats pid to 824164
+2024-07-25 21:30:36,258 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Loading settings from /home/fundwotsai/.config/wandb/settings
+2024-07-25 21:30:36,258 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Loading settings from /data/home/fundwotsai/test_AP/AP-adapter/wandb/settings
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'train_apadapter_v2.py', 'program_abspath': '/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py', 'program': '/data/home/fundwotsai/test_AP/AP-adapter/train_apadapter_v2.py'}
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:_log_setup():520] Logging user logs to /data/home/fundwotsai/test_AP/AP-adapter/wandb/run-20240725_213036-wiz1oy4f/logs/debug.log
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:_log_setup():521] Logging internal logs to /data/home/fundwotsai/test_AP/AP-adapter/wandb/run-20240725_213036-wiz1oy4f/logs/debug-internal.log
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:init():560] calling init triggers
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:init():567] wandb.init called with sweep_config: {}
+config: {}
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:init():610] starting backend
+2024-07-25 21:30:36,259 INFO    MainThread:824164 [wandb_init.py:init():614] setting up manager
+2024-07-25 21:30:36,262 INFO    MainThread:824164 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-07-25 21:30:36,264 INFO    MainThread:824164 [wandb_init.py:init():622] backend started and connected
+2024-07-25 21:30:36,272 INFO    MainThread:824164 [wandb_init.py:init():711] updated telemetry
+2024-07-25 21:30:36,350 INFO    MainThread:824164 [wandb_init.py:init():744] communicating run to backend with 90.0 second timeout
+2024-07-25 21:30:36,828 INFO    MainThread:824164 [wandb_run.py:_on_init():2402] communicating current version
+2024-07-25 21:30:37,005 INFO    MainThread:824164 [wandb_run.py:_on_init():2411] got version response upgrade_message: "wandb version 0.17.5 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-07-25 21:30:37,005 INFO    MainThread:824164 [wandb_init.py:init():795] starting run threads in backend
+2024-07-25 21:30:41,528 INFO    MainThread:824164 [wandb_run.py:_console_start():2380] atexit reg
+2024-07-25 21:30:41,528 INFO    MainThread:824164 [wandb_run.py:_redirect():2235] redirect: wrap_raw
+2024-07-25 21:30:41,528 INFO    MainThread:824164 [wandb_run.py:_redirect():2300] Wrapping output streams.
+2024-07-25 21:30:41,528 INFO    MainThread:824164 [wandb_run.py:_redirect():2325] Redirects installed.
+2024-07-25 21:30:41,530 INFO    MainThread:824164 [wandb_init.py:init():838] run started, returning control to user process
+2024-07-25 21:30:41,530 INFO    MainThread:824164 [wandb_run.py:_config_callback():1382] config_cb None None {'train_text_encoder': False, 'train_gpt2': False, 'save_steps': 500, 'save_as_full_pipeline': False, 'pretrained_model_name_or_path': 'cvssp/audioldm2-large', 'apadapter': 'True', 'train_data_dir': '/data/home/fundwotsai/Fast-Audioset-Download/audioset_unbalanced_train_metadata_clean.json', 'output_dir': '/data/home/fundwotsai/test_AP/AP-adapter/audioldm2-large-ipadapter-audioset-unet-random-pooling_v4', 'seed': None, 'sample_rate': 16000, 'duration': 10.0, 'train_batch_size': 1, 'sample_batch_size': 4, 'num_train_epochs': 1, 'max_train_steps': 1000000, 'gradient_accumulation_steps': 1, 'gradient_checkpointing': False, 'learning_rate': 0.0001, 'scale_lr': False, 'lr_scheduler': 'constant', 'lr_warmup_steps': 500, 'lr_num_cycles': 1, 'use_8bit_adam': False, 'dataloader_num_workers': 1, 'adam_beta1': 0.9, 'adam_beta2': 0.999, 'adam_weight_decay': 0.01, 'adam_epsilon': 1e-08, 'max_grad_norm': 1.0, 'mixed_precision': 'no', 'allow_tf32': False, 'report_to': 'wandb', 'validation_prompt': None, 'num_validation_audio_files': 1, 'validation_steps': 1, 'validation_epochs': None, 'validate_experiments': False, 'checkpointing_steps': 1, 'checkpoints_total_limit': None, 'resume_from_checkpoint': None, 'enable_xformers_memory_efficient_attention': False}
+2024-07-25 21:31:11,955 WARNING MsgRouterThr:824164 [router.py:message_loop():77] message_loop has been closed
