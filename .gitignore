@@ -4,3 +4,4 @@ accompaniment_generation/
 test/
 style_transfer/
 timbre_transfer/
+wandb/
