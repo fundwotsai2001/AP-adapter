@@ -70,14 +70,11 @@ Or simply use a lower batchsize:
 ```
 ## Cite this work
 ```
-@misc{tsai2024audiopromptadapterunleashing,
-      title={Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning}, 
-      author={Fang-Duo Tsai and Shih-Lun Wu and Haven Kim and Bo-Yu Chen and Hao-Chung Cheng and Yi-Hsuan Yang},
-      year={2024},
-      eprint={2407.16564},
-      archivePrefix={arXiv},
-      primaryClass={cs.SD},
-      url={https://arxiv.org/abs/2407.16564}, 
+@article{tsai2024audio,
+  title={Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning},
+  author={Tsai, Fang-Duo and Wu, Shih-Lun and Kim, Haven and Chen, Bo-Yu and Cheng, Hao-Chung and Yang, Yi-Hsuan},
+  journal={arXiv preprint arXiv:2407.16564},
+  year={2024}
 }
 ```
 ## Acknowledgments
