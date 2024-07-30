@@ -463,7 +463,6 @@ class CollateFunction:
             prompt_embeds, attention_mask, generated_prompt_embeds = self.audioldmpipeline.encode_prompt(
                         prompt=prompt_texts,
                         device="cuda",
-                        negative_prompt="worst quality, low quality",
                         num_waveforms_per_prompt=1,
                         do_classifier_free_guidance=False
                     )
@@ -509,7 +508,7 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     )
     pipeline=audioldmpipeline
     pipeline.set_progress_bar_config(disable=True)
-    
+    pipeline.unet.to(accelerator.device, dtype=torch.float16)
     # import scipy
     # run inference
     generator = None if args.seed is None else torch.Generator(device=accelerator.device).manual_seed(args.seed)
