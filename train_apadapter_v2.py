@@ -508,7 +508,6 @@ def log_validation(outside_data_pairs, audioldmpipeline, text_encoder, tokenizer
     )
     pipeline=audioldmpipeline
     pipeline.set_progress_bar_config(disable=True)
-    pipeline.unet.to(accelerator.device, dtype=torch.float16)
     # import scipy
     # run inference
     generator = None if args.seed is None else torch.Generator(device=accelerator.device).manual_seed(args.seed)
