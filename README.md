@@ -2,7 +2,7 @@
 This is the official implementation of paper: "Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning" in Proc. Int. Society for Music Information Retrieval Conf. (ISMIR), 2024.\
 [arXiv](https://arxiv.org/abs/2407.16564) | [Demo website](https://young-almond-689.notion.site/Audio-Prompt-Adapter-Unleashing-Music-Editing-Abilities-For-Text-To-Music-with-Lightweight-Finetuni-fbbfeb0608664f61a6bf894d56e85820) | [Demo video](https://youtu.be/fr9rCSaYUlA?si=3tV4zGriIrW8yylF)
 
-*These folder contains the evaluation dataset use in the paper, except for the Korean data which is not licensed outside of Korea.
+*These folder contains the evaluation dataset use in the paper.
 ```
 /eval_audio_in_domain
 /eval_audio_out_of_domain
@@ -68,13 +68,25 @@ Or simply use a lower batchsize:
 ## choose a moderate size
 --train_batch_size= 1 
 ```
+## Licensing
+
+This project is dual-licensed under the Apache-2.0 License and the CC-BY-NC-SA-4.0 License.
+
+### CC-BY-NC-SA-4.0 License
+For the AudioLDM2 checkpoint and the weights in /copied_cross_attention folder are under [CC-BY-NC-SA-4.0 License](https://github.com/fundwotsai2001/AP-adapter/blob/master/LICENSE).
+
+### Apache-2.0 License
+The code in this repository is licensed under the [Apache License 2.0](https://github.com/fundwotsai2001/AP-adapter/blob/master/LICENSE_Apache-2.0)
 ## Cite this work
 ```
-@article{tsai2024audio,
-  title={Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning},
-  author={Tsai, Fang-Duo and Wu, Shih-Lun and Kim, Haven and Chen, Bo-Yu and Cheng, Hao-Chung and Yang, Yi-Hsuan},
-  journal={arXiv preprint arXiv:2407.16564},
-  year={2024}
+@misc{tsai2024audiopromptadapterunleashing,
+      title={Audio Prompt Adapter: Unleashing Music Editing Abilities for Text-to-Music with Lightweight Finetuning}, 
+      author={Fang-Duo Tsai and Shih-Lun Wu and Haven Kim and Bo-Yu Chen and Hao-Chung Cheng and Yi-Hsuan Yang},
+      year={2024},
+      eprint={2407.16564},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2407.16564}, 
 }
 ```
 ## Acknowledgments
