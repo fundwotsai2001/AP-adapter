@@ -15,6 +15,8 @@ We provide a step-by-step series of examples that explain how to set up a develo
 ```bash
 git clone https://github.com/fundwotsai2001/AP-adapter.git
 cd AP-adapter
+pip install -r requirements.txt
+conda install matplotlib
 ```
 ## Downloading checkpoint
 For AudioMAE checkpoint you can download it from 

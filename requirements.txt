@@ -12,4 +12,3 @@ torchaudio-augmentations==0.2.4
 tensorboard==2.14.0
 timm
 gdown
-matplotlib==3.5
