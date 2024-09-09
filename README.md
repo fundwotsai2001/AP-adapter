@@ -25,7 +25,7 @@ For AP-adapter checkpoint you can download it from
 [AP-adpater](https://drive.google.com/drive/u/0/folders/1TPbiVx4ijjd2tdbLNmwPgpR8UUoRizmj)
 ```
 gdown https://drive.google.com/uc?id=1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu
-gdown https://drive.google.com/uc?id=1rA1zgCdioOpUpds-CdxL8uOKTx1-cAcH
+gdown https://drive.google.com/uc?id=1LS3KeczUwfMzk8Cf5oTvkjCkqK3OVnkZ
 # If the command doesn't work, you may consider upgrade gdown, ex. pip install gdown --upgrade
 ```
 
