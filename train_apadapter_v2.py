@@ -34,8 +34,7 @@ from audioldm.utils import default_audioldm_config
 from scipy.io.wavfile import write
 # from evaluate import LAIONCLAPEvaluator
 from diffusers.loaders import AttnProcsLayers
-import matplotlib
-matplotlib.use('Agg') # No pictures displayed 
+
 import torch.multiprocessing as mp
 from audio_encoder.AudioMAE import AudioMAEConditionCTPoolRand, extract_kaldi_fbank_feature
 from audioldm.audio.tools import get_mel_from_wav, _pad_spec, normalize_wav, pad_wav
