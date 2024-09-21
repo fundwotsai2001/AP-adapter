@@ -13,3 +13,4 @@ tensorboard==2.14.0
 timm
 gdown
 wandb
+matplotlib==3.9.2
