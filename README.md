@@ -14,6 +14,7 @@ We provide a step-by-step series of examples that explain how to set up a develo
 
 ```bash
 git clone https://github.com/fundwotsai2001/AP-adapter.git
+conda create -n <env_name> python=3.11
 cd AP-adapter
 pip install -r requirements.txt
 conda install matplotlib
