@@ -7,7 +7,7 @@ This is the official implementation of paper: "Audio Prompt Adapter: Unleashing 
 /eval_audio_in_domain
 /eval_audio_out_of_domain
 ```
-[SDedit](https://github.com/fundwotsai2001/SDEdit-AudioLDM2) is the code use for AudioLDM2 SDEdit in evaluation.
+[SDEdit-AudioLDM2](https://github.com/fundwotsai2001/SDEdit-AudioLDM2) is the code use for AudioLDM2 SDEdit in evaluation.
 Please give me a star if you found this project useful or inspiring~
 
 ## Installation
