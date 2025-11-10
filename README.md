@@ -23,11 +23,11 @@ pip install -r requirements.txt
 For AudioMAE checkpoint you can download it from 
 [pretrain](https://drive.google.com/file/d/1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu/view?usp=share_link)\
 For AP-adapter checkpoint you can download it from
-[AP-adpater](https://drive.google.com/drive/u/0/folders/1TPbiVx4ijjd2tdbLNmwPgpR8UUoRizmj)
+[AP-adpater](https://drive.google.com/drive/folders/1LkIe3-_4nqvDJQqEgglbyj9AMFkn0TLd)
 ```
 gdown https://drive.google.com/uc?id=1ni_DV4dRf7GxM8k-Eirx71WP9Gg89wwu
-gdown https://drive.google.com/uc?id=1LS3KeczUwfMzk8Cf5oTvkjCkqK3OVnkZ
-# If the command doesn't work, you may consider upgrade gdown, ex. pip install gdown --upgrade
+gdown --fuzzy "https://drive.google.com/file/d/1kyc2px7JAvxbcubllexAvn85TK-UXYgy/view?usp=sharing"
+# If the command doesn't work, you may consider upgrade gdown, e.g. pip install gdown --upgrade
 ```
 
 
